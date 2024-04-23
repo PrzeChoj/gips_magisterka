@@ -50,7 +50,7 @@ n_dim_df_forplot <- mutate(n_dim_df,
 
 plot_heatmap_true <- function(my_ggplot){
   my_ggplot +
-    labs(fill = "covariance") +
+    labs(fill = "kowariancja") +
     theme(
       title = element_text(size = 16),
       legend.title = element_text(size = 16)
@@ -65,14 +65,14 @@ plot_for_matrix_structure <- function(my_matrix_structure, x_axis_type, hide_leg
     true_line <- ifelse(my_matrix_structure == "large", 1,
                         ifelse(my_matrix_structure == "moderate", 5,
                                ifelse(my_matrix_structure == "no", 8, NA)))
-    my_xlabel <- "Simplicyty of the model (n0)"
+    my_xlabel <- "Prostota modelu (n0)"
     x_breaks <- 1:8
   } else {
     my_df <- n_dim_df_forplot
     true_line <- ifelse(my_matrix_structure == "large", 5,
                         ifelse(my_matrix_structure == "moderate", 17,
                                ifelse(my_matrix_structure == "no", 36, NA)))
-    my_xlabel <- "Number of parameters in a model (n_dim)"
+    my_xlabel <- "Liczba parametrów w modelu (n_dim)"
     x_breaks <-
       if (my_matrix_structure == "moderate") {
         c(5, 10, 17, 20, 30, 36) # additional 17
@@ -90,7 +90,7 @@ plot_for_matrix_structure <- function(my_matrix_structure, x_axis_type, hide_leg
     geom_vline(xintercept = true_line, linetype = "dashed") +
     facet_wrap(~d, nrow = 2, labeller = "label_both") +
     xlab(my_xlabel) +
-    ylab("Probability") +
+    ylab("Prawdopodobieństwo") +
     guides(fill = guide_legend(title = "delta", override.aes = aes(alpha = 1))) +
     labs(title = title) +
     lims(y = c(0, 1)) +
@@ -106,11 +106,11 @@ plot_for_matrix_structure <- function(my_matrix_structure, x_axis_type, hide_leg
 }
 
 my_heatmap_true_large <- plot_heatmap_true(gips:::pretty_plot_matrix(cov_large_str,
-  bquote(atop("Heatmap of the true covariance matrix", bold("Large structure                                  ")))))
+  bquote(atop("Mapa ciepła macierzy kowariancji", bold("Duża struktura                            ")))))
 my_heatmap_true_moderate <- plot_heatmap_true(gips:::pretty_plot_matrix(cov_moderate_str,
-  bquote(atop("Heatmap of the true covariance matrix", bold("Moderate structure                            ")))))
+  bquote(atop("Mapa ciepła macierzy kowariancji", bold("Umiarkowana struktura             ")))))
 my_heatmap_true_no <- plot_heatmap_true(gips:::pretty_plot_matrix(cov_no_str,
-  bquote(atop("Heatmap of the true covariance matrix", bold("No structure                                       ")))))
+  bquote(atop("Mapa ciepła macierzy kowariancji", bold("Brak struktury                             ")))))
 
 # my_heatmap_true_large
 # my_heatmap_true_moderate
@@ -142,21 +142,21 @@ x_axis_type <- "n_dim"
 ggsave(
   file.path(".", "plots", paste0("hyper_params_influence_", x_axis_type, "_", structures[1], ".png")),
   plot_for_matrix_structure(structures[1], x_axis_type, hide_legend[1],
-    title = bquote(atop("Effect of parameters on a posteriori structure distribution",
-                        "for a matrix with" ~ bold("no") ~ "structure                                            "))),
+    title = bquote(atop("Wpływ parametrów na rozkład a posteriori",
+                        "dla macierzy" ~ bold("bez") ~ "struktury                         "))),
   width = plot_width[1]
 )
 ggsave(
   file.path(".", "plots", paste0("hyper_params_influence_", x_axis_type, "_", structures[2], ".png")),
   plot_for_matrix_structure(structures[2], x_axis_type, hide_legend[2],
-    title = bquote(atop("Effect of parameters on a posteriori structure distribution",
-                        "for a matrix with" ~ bold("moderate") ~ "structure                                "))),
+    title = bquote(atop("Wpływ parametrów na rozkład a posteriori",
+                        "dla macierzy z" ~ bold("umiarkowaną") ~ "strukturą     "))),
   width = plot_width[2]
 )
 ggsave(
   file.path(".", "plots", paste0("hyper_params_influence_", x_axis_type, "_", structures[3], ".png")),
   plot_for_matrix_structure(structures[3], x_axis_type, hide_legend[3],
-    title = bquote(atop("Effect of parameters on a posteriori structure distribution",
-                        "for a matrix with" ~ bold("large") ~ "structure                                       "))),
+    title = bquote(atop("Wpływ parametrów na rozkład a posteriori",
+                        "dla macierzy z" ~ bold("dużą") ~ "strukturą                    "))),
   width = plot_width[3]
 )
