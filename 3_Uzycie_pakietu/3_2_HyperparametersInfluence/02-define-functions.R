@@ -3,7 +3,7 @@ library(magrittr)
 
 show_progress_bar <- TRUE
 
-DATADIR <- file.path(".", "3_PackageUsage", "3_1_breastCancer", "data")
+DATADIR <- file.path(".", "3_Uzycie_pakietu", "3_1_breastCancer", "data")
 load(file.path(DATADIR, "matrices_8.rda"))
 
 p <- nrow(cov_large_str)
@@ -36,13 +36,13 @@ tasks <- expand.grid(
 get_n_dim_from_perm_name <- function(g_perm_name, size = p) {
   g_perm <- gips_perm(g_perm_name, size = size)
   n_dim <- sum(get_structure_constants(g_perm)[["dim_omega"]])
-  
+
   n_dim
 }
 get_n0_from_perm_name <- function(g_perm_name, size = p) {
   structure_constants <- get_structure_constants(gips_perm(g_perm_name, p))
   n0 <- max(structure_constants[["r"]] * structure_constants[["d"]] / structure_constants[["k"]])
-  
+
   n0
 }
 
@@ -61,7 +61,7 @@ conduct_trial <- function(d, delta, matrix_structure) {
     return_probabilities = TRUE
   )
   probs <- get_probabilities_from_gips(g_MAP)
-  
+
   # n_parameters
   visited_n_dim <- sapply(
     names(probs),
@@ -70,7 +70,7 @@ conduct_trial <- function(d, delta, matrix_structure) {
   n_dim_distribution <- split(probs, visited_n_dim) %>%
     sapply(sum) %>%
     setNames(attr(visited_n_dim, "levels"))
-  
+
   # n0
   visited_n0 <- sapply(
     names(probs),

@@ -5,7 +5,7 @@ library(igraph)
 library(gRim)
 library(RBGL)
 
-DATADIR <- file.path(".", "3_PackageUsage", "3_1_breastCancer", "data")
+DATADIR <- file.path(".", "3_Uzycie_pakietu", "3_1_breastCancer", "data")
 
 load(file.path(DATADIR, "data2.rda"))
 S <- cov(data2)
@@ -24,30 +24,30 @@ graph_from_g_MAP <- function(gips_object, my_quantile) {
   S <- attr(gips_object, "S")
   S_MAP <- project_matrix(S, gips_object)
   K <- solve(S_MAP)
-  
+
   # We know there is gRbase::cov2pcor(), but there was sth wrong with it on the cluster we are using...
   PC_MAP <- -cov2cor(K)
   diag(PC_MAP) <- -diag(PC_MAP)
-  
+
   cutoff_val <- quantile(abs(PC_MAP), my_quantile)
 
   adj_mat <- (abs(PC_MAP) > cutoff_val) * 1
   diag(adj_mat) <- 0
-  
+
   my_graph <- graph_from_adjacency_matrix(adj_mat, mode = "undirected")
-  
+
   # BIC:
   maxCliques_G <- maxClique(as_graphnel(my_graph))$maxCliques
   MLE_MAP <- ggmfit(S_MAP, n = n, maxCliques_G)
   kG <- length(unique(c(S_MAP * adj_mat))) - 1
   BICG <- kG * log(n) - 2 * (-((n - 1) * p / 2) * log(2 * pi) + ((n - 1) / 2) * log(MLE_MAP$detK) - 0.5 * (n - 1) * p)
   print(paste0("BIC: ", BICG))
-  
+
   # for the plot:
   K_masked <- K * adj_mat
   my_graph_weighted <- graph_from_adjacency_matrix(K_masked, mode = "undirected", weighted = TRUE)
   my_graph_weighted <- simplify(my_graph_weighted)
-  
+
   # edge list:
   my_edge_list <- get.edgelist(my_graph_weighted)
   my_edges_data_frame <- data.frame(my_edge_list)

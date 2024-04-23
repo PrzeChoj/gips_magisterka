@@ -2,7 +2,7 @@ library(gips)
 
 set.seed(2022)
 
-DATADIR <- file.path(".", "3_PackageUsage", "3_1_breastCancer", "data")
+DATADIR <- file.path(".", "3_Uzycie_pakietu", "3_1_breastCancer", "data")
 
 p <- 8
 large_structure_perm <- "(12345678)"

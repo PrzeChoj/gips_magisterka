@@ -13,7 +13,7 @@ switch_names_structure_size <- function(structure_size_name) {
 }
 
 # load data
-DATADIR <- file.path(".", "3_PackageUsage", "3_3_ComparisonWithOtherMethods", "data")
+DATADIR <- file.path(".", "3_Uzycie_pakietu", "3_3_ComparisonWithOtherMethods", "data")
 files <- list.files(DATADIR, "*.rda")
 files <- grep("job_[0-9]+_results_.*rda", files, value = TRUE)
 l <- list()
@@ -53,7 +53,7 @@ results_df %>%
   tidyr::pivot_wider(names_from = sample_size, values_from = positive_definite)
 
 # The nonzeros looks very similar (to our surprise)
-results_df_zeros <- results_df %>% 
+results_df_zeros <- results_df %>%
   filter(zeros_present == "zeros")
 
 
