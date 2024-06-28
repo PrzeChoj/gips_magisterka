@@ -2,7 +2,7 @@
 
 To repozytorium zawiera kod użyty do pracy magisterskiej Adama Przemysława Chojeckiego dotyczącej pakietu `gips` dla języka R.
 
-Kod jest zaprojektowany do działania z `gips` 1.2.1.
+Kod jest zaprojektowany do działania z `gips` 1.2.2.9000
 
 Aby go uruchomić, należy zainstalować następujące pakiety (w podanej kolejności):
 ```
