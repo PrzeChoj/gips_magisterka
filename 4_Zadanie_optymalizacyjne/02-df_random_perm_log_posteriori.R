@@ -14,14 +14,10 @@ get_random_perm_value <- function(i, my_seed) {
   n <- all_experiments[[i]]$n
   true_perm <- all_experiments[[i]]$true_perm
   true_matrix_generator <- all_experiments[[i]]$true_matrix_generator
-
-  sigma_matrix <- true_matrix_generator(my_seed)
+  S_matrix_generator <- all_experiments[[i]]$S_matrix_generator
 
   p <- attr(true_perm, "size")
-  Z <- withr::with_seed(my_seed,
-    code = MASS::mvrnorm(n = n, mu = numeric(p), Sigma = sigma_matrix)
-  )
-  S <- (t(Z) %*% Z) / n
+  S <- S_matrix_generator(my_seed, true_perm, n)
 
   random_perms <- withr::with_seed(my_seed,
     code = permutations::rperm(K, r = p)

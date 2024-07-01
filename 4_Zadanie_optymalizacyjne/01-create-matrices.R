@@ -54,11 +54,20 @@ for (i in 1:length(all_n)) {
   for (j in 1:length(all_perms)) {
     experiment_index <- (i - 1) * length(all_perms) + j
     true_perm <- all_perms[[j]]
+    n <- all_n[[i]]
     all_experiments[[experiment_index]] <- list(
-      n = all_n[[i]],
+      n = n,
       true_perm = true_perm,
       true_matrix_generator = function(my_seed) {
         get_sigma_wishart_perm(true_perm, my_seed)
+      },
+      S_matrix_generator = function(my_seed, true_perm, n) {
+        true_matrix <- get_sigma_wishart_perm(true_perm, my_seed)
+        p <- attr(true_perm, "size")
+        Z <- withr::with_seed(my_seed,
+          code = MASS::mvrnorm(n = n, mu = numeric(p), Sigma = true_matrix)
+        )
+        (t(Z) %*% Z) / n
       }
     )
   }
