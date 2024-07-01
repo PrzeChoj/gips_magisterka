@@ -5,7 +5,7 @@ library(igraph)
 library(gRim)
 library(RBGL)
 
-DATADIR <- file.path(".", "3_Uzycie_pakietu", "3_1_breastCancer", "data")
+DATADIR <- file.path(".", "5_Pakiet_i_jego_zastosowanie", "5_2_breastCancer", "data")
 
 load(file.path(DATADIR, "data2.rda"))
 S <- cov(data2)

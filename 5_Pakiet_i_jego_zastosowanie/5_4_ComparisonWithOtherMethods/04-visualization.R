@@ -13,7 +13,7 @@ switch_names_structure_size <- function(structure_size_name) {
 }
 
 # load data
-DATADIR <- file.path(".", "3_Uzycie_pakietu", "3_3_ComparisonWithOtherMethods", "data")
+DATADIR <- file.path(".", "5_Pakiet_i_jego_zastosowanie", "5_4_ComparisonWithOtherMethods", "data")
 files <- list.files(DATADIR, "*.rda")
 files <- grep("job_[0-9]+_results_.*rda", files, value = TRUE)
 l <- list()

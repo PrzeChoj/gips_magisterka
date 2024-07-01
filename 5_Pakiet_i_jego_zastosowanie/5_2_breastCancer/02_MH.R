@@ -1,7 +1,7 @@
 # 1 hour 25 minutes on AMD EPYC 7413 Processor (single core, because multithreading would not help here)
 # 2 hours 50 minutes on MacBook Air 2017
 
-DATADIR <- file.path(".", "3_Uzycie_pakietu", "3_1_breastCancer", "data")
+DATADIR <- file.path(".", "5_Pakiet_i_jego_zastosowanie", "5_2_breastCancer", "data")
 load(file.path(DATADIR, "data2.rda"))
 S <- cov(data2)
 

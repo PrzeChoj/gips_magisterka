@@ -31,12 +31,12 @@ get_lambda <- function(my_seed, n, show_progress_bar = FALSE) {
   lambda_LR
 }
 
-my_plot <- function(my_lambdas) {
+my_plot <- function(my_lambdas, p_value_text_place) {
   plot(ecdf(my_lambdas), xlim = c(0, 50), main = paste0("Wykres ECDF dla n = ", n))
   lines(0:M / (M/50), y = pchisq(0:M / (M/50), p*(p+1)/2 - 4), col = "red")
   legend(25, 0.6, legend=c("chi^2_17", "lambda_LR"), col=c("red", "black"), lty=c(1,1))
   my_p_val <- ks.test(my_lambdas, "pchisq", p*(p+1)/2 - 4)
-  text(45, 0.1, paste("p-value =", format(my_p_val$p.value, digits = 2, scientific = FALSE)),
+  text(p_value_text_place, 0.1, paste("p-value =", format(my_p_val$p.value, digits = 2, scientific = FALSE)),
        cex=1, pos=3,col="blue")
 }
 
@@ -44,19 +44,19 @@ library(parallel)
 numCores <- detectCores()
 available_cores <- 7
 
-par(mfrow=c(1,1))
 M <- 1000
 
 n <- 10
 my_lambdas <- unlist(mclapply(1:M, function(my_seed){get_lambda(my_seed, n, FALSE)}, mc.cores = available_cores))
-my_plot(my_lambdas)
+my_plot(my_lambdas, 29)
+# save as plots/test_n_10.png
 
-n <- 50
+n <- 30
 my_lambdas <- unlist(mclapply(1:M, function(my_seed){get_lambda(my_seed, n, FALSE)}, mc.cores = available_cores))
-my_plot(my_lambdas)
+my_plot(my_lambdas, 36)
+# save as plots/test_n_30.png
 
-n <- 200
+n <- 150
 my_lambdas <- unlist(mclapply(1:M, function(my_seed){get_lambda(my_seed, n, FALSE)}, mc.cores = available_cores))
-my_plot(my_lambdas)
-
-par(mfrow=c(1,1))
+my_plot(my_lambdas, 30)
+# save as plots/test_n_150.png

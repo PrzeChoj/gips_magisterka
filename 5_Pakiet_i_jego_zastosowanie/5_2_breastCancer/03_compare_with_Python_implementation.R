@@ -1,4 +1,4 @@
-load(file.path(".", "3_Uzycie_pakietu", "3_1_breastCancer", "data", "data2.rda"))
+load(file.path(".", "5_Pakiet_i_jego_zastosowanie", "5_2_breastCancer", "data", "data2.rda"))
 S <- cov(data2)
 p <- dim(S)[1]
 

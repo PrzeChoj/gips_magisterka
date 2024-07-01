@@ -1,4 +1,4 @@
-Wykres (Rysunek 7) jest oparty na plikach `g_MAP_edge_list.csv` i `g_MAP_vertices_colors.csv` utworzonych w `04_save_graph.R`.
+Wykres (Rysunek TODO(numer)) jest oparty na plikach `g_MAP_edge_list.csv` i `g_MAP_vertices_colors.csv` utworzonych w `04_save_graph.R`.
 
 Został on utworzony za pomocą [Cytoscape](https://cytoscape.org/).
 
