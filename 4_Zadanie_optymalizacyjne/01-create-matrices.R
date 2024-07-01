@@ -53,11 +53,12 @@ all_experiments <- vector("list", length(all_n) * length(all_perms))
 for (i in 1:length(all_n)) {
   for (j in 1:length(all_perms)) {
     experiment_index <- (i - 1) * length(all_perms) + j
+    true_perm <- all_perms[[j]]
     all_experiments[[experiment_index]] <- list(
       n = all_n[[i]],
-      true_perm = all_perms[[j]],
+      true_perm = true_perm,
       true_matrix_generator = function(my_seed) {
-        get_sigma_wishart_perm(all_perms[[j]], my_seed)
+        get_sigma_wishart_perm(true_perm, my_seed)
       }
     )
   }
@@ -65,6 +66,6 @@ for (i in 1:length(all_n)) {
 
 
 # Save:
-save(all_experiments,
-  file = file.path(DATADIR, "all_experiments")
+save(all_experiments, get_sigma_wishart_perm,
+  file = file.path(DATADIR, "all_experiments.rda")
 )
