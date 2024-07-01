@@ -3,7 +3,7 @@ library(magrittr)
 
 show_progress_bar <- TRUE
 
-DATADIR <- file.path(".", "3_Uzycie_pakietu", "3_1_breastCancer", "data")
+DATADIR <- file.path(".", "5_Pakiet_i_jego_zastosowanie", "5_3_HyperparametersInfluence", "data")
 load(file.path(DATADIR, "matrices_8.rda"))
 
 p <- nrow(cov_large_str)
