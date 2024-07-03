@@ -1,6 +1,7 @@
 # For M = 25, approx 30 seconds on 7 cores of Apple M2
+# For M = 10, approx 15 seconds on 7 cores of Apple M2
 available_cores <- 7
-M <- 25 # number of seeds to compute the value for
+M <- 10 # number of seeds to compute the value for
 
 library(gips)
 library(magrittr)

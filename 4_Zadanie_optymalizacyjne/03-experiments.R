@@ -1,14 +1,17 @@
-available_cores <- 7
-F_call <- 10000 # number of function call
-#F_call <- 1000
-#F_call <- 3
+available_cores <- 47
+# number of function call:
+#F_call <- 3 # time
+F_call <- 10 # time
+#F_call <- 100 # time
+#F_call <- 1000 # time
+#F_call <- 10000 # time
 
 library(gips)
 
 DATADIR <- file.path(".", "4_Zadanie_optymalizacyjne", "data")
 load(file.path(DATADIR, "all_experiments.rda"))
 
-M <- 25 # defined in 02.R
+M <- 10 # defined in 02.R
 
 calculate_g_MH <- function(experiment_id, my_seed) {
   n <- all_experiments[[experiment_id]]$n
@@ -78,5 +81,5 @@ for (experiment_id_and_seed in 1:(M * length(all_experiments))) {
 }
 
 save(my_MH_list_results,
-  file = file.path(DATADIR, "my_MH_list_results.rda")
+  file = file.path(DATADIR, paste0("my_MH_list_results_", F_call, ".rda"))
 )
