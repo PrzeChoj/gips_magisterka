@@ -4,7 +4,8 @@ library(gips)
 
 load(file.path(DATADIR, "all_experiments.rda")) # all_experiments
 load(file.path(DATADIR, "df_random_perm_log_posteriori.rda")) # list_random_perm_log_posteriori
-load(file.path(DATADIR, "results_MH_10000.rda")) # my_MH_list_results
+load(file.path(DATADIR, "results_MH_10000.rda")) # MH_list_results
+load(file.path(DATADIR, "results_RAND_10000.rda")) # RAND_list_results
 
 source(file.path(DATADIR, "..", "00-utils.R"))
 
