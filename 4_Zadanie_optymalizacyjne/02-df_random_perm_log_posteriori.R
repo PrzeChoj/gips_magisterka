@@ -1,6 +1,6 @@
-# For M = 25, approx 30 seconds on 7 cores of Apple M2
-# For M = 10, approx 15 seconds on 7 cores of Apple M2
-available_cores <- 7
+# For M = 10, approx 75 seconds on 47 cores of sr-3:
+
+available_cores <- 47
 M <- 10 # number of seeds to compute the value for
 
 library(gips)

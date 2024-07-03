@@ -1,10 +1,11 @@
+#remotes::install_github("PrzeChoj/gips", ref = "altOptimizers")
+
 available_cores <- 47
-# number of function call:
-#F_call <- 3 # time
-F_call <- 10 # time
-#F_call <- 100 # time
-#F_call <- 1000 # time
-#F_call <- 10000 # time
+# number of function call: # time on 47 cores of sr-3:
+#F_call <- 10 # 1.5 minutes
+#F_call <- 100 # 9 minutes
+#F_call <- 1000 # 25 minutes
+F_call <- 10000 # 123 minutes
 
 library(gips)
 
@@ -81,5 +82,5 @@ for (experiment_id_and_seed in 1:(M * length(all_experiments))) {
 }
 
 save(my_MH_list_results,
-  file = file.path(DATADIR, paste0("my_MH_list_results_", F_call, ".rda"))
+  file = file.path(DATADIR, paste0("results_MH_", F_call, ".rda"))
 )
