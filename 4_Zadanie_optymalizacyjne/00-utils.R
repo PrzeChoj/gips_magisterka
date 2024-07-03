@@ -1,6 +1,7 @@
+M <- 10 # number of seeds to compute the value for
+
 # for 01:
 # Make true matrices
-stabilizer <- 0.1
 
 #' true_perm <- gips::gips_perm("(12345)", 10)
 #' A <- get_sigma_wishart_perm(true_perm, 2022)
