@@ -16,5 +16,5 @@ Sys.time() - start_time
 MH_list_results <- widen_list_result_experiments(list_result_experiments)
 
 save(MH_list_results,
-  file = file.path(DATADIR, paste0("results_MH_", F_call, ".rda"))
+  file = file.path(DATADIR, paste0("results_", optimizer, "_", F_call, ".rda"))
 )
