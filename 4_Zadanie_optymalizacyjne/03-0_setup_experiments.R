@@ -1,7 +1,5 @@
 #remotes::install_github("PrzeChoj/gips", ref = "altOptimizers")
 
-available_cores <- 47
-
 library(gips)
 
 DATADIR <- file.path(".", "4_Zadanie_optymalizacyjne", "data")
@@ -31,6 +29,19 @@ perform_single_seed_experiment <- function(experiment_id_and_seed, optimizer) {
   my_seed <- c_experiment_id_my_seed[2]
 
   calculate_g_for_optimizer(experiment_id, my_seed, optimizer)
+}
+
+library(parallel)
+numCores <- detectCores()
+available_cores <- min(available_cores, numCores)
+
+apply_experiments <- function(optimizer, available_cores) {
+  mclapply(
+    1:(M * length(all_experiments)),
+    function(experiment_id_and_seed) {
+      perform_single_seed_experiment(experiment_id_and_seed, optimizer)
+    }, mc.cores = available_cores
+  )
 }
 
 widen_list_result_experiments <- function(list_result_experiments) {
