@@ -9,13 +9,13 @@ library(magrittr)
 DATADIR <- file.path(".", "4_Zadanie_optymalizacyjne", "data")
 load(file.path(DATADIR, "all_experiments.rda"))
 
+source(file.path(DATADIR, "..", "00-utils.R"))
+
 
 K <- 30 # number of random permutations to draw; 100 and 30 are very similar, so 30 is enought
 get_random_perm_value <- function(i, my_seed) {
   n <- all_experiments[[i]]$n
   true_perm <- all_experiments[[i]]$true_perm
-  true_matrix_generator <- all_experiments[[i]]$true_matrix_generator
-  S_matrix_generator <- all_experiments[[i]]$S_matrix_generator
 
   p <- attr(true_perm, "size")
   S <- S_matrix_generator(my_seed, true_perm, n)

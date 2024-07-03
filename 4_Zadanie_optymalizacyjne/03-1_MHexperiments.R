@@ -12,6 +12,8 @@ library(gips)
 DATADIR <- file.path(".", "4_Zadanie_optymalizacyjne", "data")
 load(file.path(DATADIR, "all_experiments.rda"))
 
+source(file.path(DATADIR, "..", "00-utils.R"))
+
 M <- 10 # defined in 02.R
 
 calculate_g_MH <- function(experiment_id, my_seed) {
