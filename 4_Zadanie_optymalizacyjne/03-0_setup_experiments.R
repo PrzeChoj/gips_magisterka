@@ -34,9 +34,9 @@ perform_single_seed_experiment <- function(experiment_id_and_seed, optimizer) {
 }
 
 widen_list_result_experiments <- function(list_result_experiments) {
-  my_MH_list_results <- vector("list", length(all_experiments))
+  my_widened_results <- vector("list", length(all_experiments))
   for (experiment_id in 1:length(all_experiments)) {
-    my_MH_list_results[[experiment_id]] <- vector("list", M)
+    my_widened_results[[experiment_id]] <- vector("list", M)
   }
 
   for (experiment_id_and_seed in 1:(M * length(all_experiments))) {
@@ -44,7 +44,8 @@ widen_list_result_experiments <- function(list_result_experiments) {
     experiment_id <- c_experiment_id_my_seed[1]
     my_seed <- c_experiment_id_my_seed[2]
 
-    my_MH_list_results[[experiment_id]][[my_seed]] <- list_result_experiments[[experiment_id_and_seed]]
+    my_widened_results[[experiment_id]][[my_seed]] <- list_result_experiments[[experiment_id_and_seed]]
   }
 
+  my_widened_results
 }
