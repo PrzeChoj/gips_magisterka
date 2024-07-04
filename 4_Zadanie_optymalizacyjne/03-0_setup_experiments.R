@@ -38,11 +38,11 @@ library(parallel)
 numCores <- detectCores()
 available_cores <- min(available_cores, numCores)
 
-apply_experiments <- function(optimizer, available_cores) {
+apply_experiments <- function(optimizer, available_cores, ...) {
   mclapply(
     1:(M * length(all_experiments)),
     function(experiment_id_and_seed) {
-      perform_single_seed_experiment(experiment_id_and_seed, optimizer)
+      perform_single_seed_experiment(experiment_id_and_seed, optimizer, ...)
     }, mc.cores = available_cores
   )
 }
