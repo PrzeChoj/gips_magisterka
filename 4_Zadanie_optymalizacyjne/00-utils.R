@@ -51,3 +51,12 @@ split_experiment_id_and_seed <- function(experiment_id_and_seed) {
 
   c(experiment_id, my_seed)
 }
+
+
+#####
+# for 04:
+scale_data <- function(all_values, value_for_0, value_for_1) {
+  stopifnot(value_for_0 < value_for_1)
+
+  (all_values - value_for_0) / (value_for_1 - value_for_0)
+}
