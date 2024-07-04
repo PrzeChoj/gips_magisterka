@@ -7,7 +7,7 @@ load(file.path(DATADIR, "all_experiments.rda"))
 
 source(file.path(DATADIR, "..", "00-utils.R"))
 
-calculate_g_for_optimizer <- function(experiment_id, my_seed, optimizer) {
+calculate_g_for_optimizer <- function(experiment_id, my_seed, optimizer, ...) {
   n <- all_experiments[[experiment_id]]$n
   true_perm <- all_experiments[[experiment_id]]$true_perm
   S_matrix_generator <- all_experiments[[experiment_id]]$S_matrix_generator
@@ -16,19 +16,22 @@ calculate_g_for_optimizer <- function(experiment_id, my_seed, optimizer) {
 
   g <- gips(S, n, was_mean_estimated = FALSE)
   g_optimized <- withr::with_seed(my_seed,
-    code = find_MAP(g, optimizer = optimizer, max_iter = F_call, show_progress_bar = FALSE)
+    code = find_MAP(
+      g, optimizer = optimizer, max_iter = F_call,
+      show_progress_bar = FALSE, ...
+    )
   )
 
   g_optimized
 }
 
 
-perform_single_seed_experiment <- function(experiment_id_and_seed, optimizer) {
+perform_single_seed_experiment <- function(experiment_id_and_seed, optimizer, ...) {
   c_experiment_id_my_seed <- split_experiment_id_and_seed(experiment_id_and_seed)
   experiment_id <- c_experiment_id_my_seed[1]
   my_seed <- c_experiment_id_my_seed[2]
 
-  calculate_g_for_optimizer(experiment_id, my_seed, optimizer)
+  calculate_g_for_optimizer(experiment_id, my_seed, optimizer, ...)
 }
 
 library(parallel)
