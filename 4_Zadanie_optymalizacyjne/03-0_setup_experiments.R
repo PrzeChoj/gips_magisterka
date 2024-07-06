@@ -10,7 +10,6 @@ source(file.path(DATADIR, "..", "00-utils.R"))
 calculate_g_for_optimizer <- function(experiment_id, my_seed, optimizer, ...) {
   n <- all_experiments[[experiment_id]]$n
   true_perm <- all_experiments[[experiment_id]]$true_perm
-  S_matrix_generator <- all_experiments[[experiment_id]]$S_matrix_generator
 
   S <- S_matrix_generator(my_seed, true_perm, n)
 

@@ -1,13 +1,9 @@
 optimizer = "MH"
-
 available_cores <- 47
-
 F_call <- 10000
 
 DATADIR <- file.path(".", "4_Zadanie_optymalizacyjne", "data")
-
 source(file.path(DATADIR, "..", "03-0_setup_experiments.R"))
-
 
 start_time <- Sys.time()
 list_result_experiments <- apply_experiments(optimizer, available_cores)
