@@ -9,7 +9,7 @@ DATADIR <- file.path(".", "4_Zadanie_optymalizacyjne", "data")
 source(file.path(DATADIR, "..", "03-0_setup_experiments.R"))
 
 cooling_schedule <- function(i) {
-  0.1
+  0.3
 }
 
 start_time <- Sys.time()
@@ -21,5 +21,5 @@ Sys.time() - start_time
 SA_list_results <- widen_list_result_experiments(list_result_experiments)
 
 save(SA_list_results,
-  file = file.path(DATADIR, paste0("results_", optimizer, "_", F_call, ".rda"))
+  file = file.path(DATADIR, paste0("results_", optimizer, "_0_3_", F_call, ".rda"))
 )
