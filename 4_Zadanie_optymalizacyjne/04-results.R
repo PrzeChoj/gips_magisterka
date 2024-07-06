@@ -18,6 +18,8 @@ load(file.path(DATADIR, paste0("results_SA_0_01_", F_call, ".rda"))) # SA_list_r
 SA_list_results_0_01 <- SA_list_results
 load(file.path(DATADIR, paste0("results_MH_S_0_9_", F_call, ".rda"))) # MH_S_list_results
 MH_S_list_results_0_9 <- MH_S_list_results
+load(file.path(DATADIR, paste0("results_MH_S_thetaseq_", F_call, ".rda"))) # MH_S_list_results
+MH_S_list_results_thetaseq <- MH_S_list_results
 
 source(file.path(DATADIR, "..", "00-utils.R"))
 
@@ -28,6 +30,7 @@ get_experiment_result <- function(i) {
   mean_result_SA_0_1 <- numeric(F_call)
   mean_result_SA_0_01 <- numeric(F_call)
   mean_result_MH_S_0_9 <- numeric(F_call)
+  mean_result_MH_S_thetaseq <- numeric(F_call)
 
 
   for (j in 1:M) {
@@ -37,8 +40,9 @@ get_experiment_result <- function(i) {
     SA_0_1_values <- attr(SA_list_results_0_1[[i]][[j]], "optimization_info")$log_posteriori_values
     SA_0_01_values <- attr(SA_list_results_0_01[[i]][[j]], "optimization_info")$log_posteriori_values
     MH_S_0_9_values <- attr(MH_S_list_results_0_9[[i]][[j]], "optimization_info")$log_posteriori_values
+    MH_S_thetaseq_values <- attr(MH_S_list_results_thetaseq[[i]][[j]], "optimization_info")$log_posteriori_values
 
-    all_values <- c(MH_values, RAND_values, SA_0_3_values, SA_0_1_values, SA_0_01_values, MH_S_0_9_values)
+    all_values <- c(MH_values, RAND_values, SA_0_3_values, SA_0_1_values, SA_0_01_values, MH_S_0_9_values, MH_S_thetaseq_values)
     value_1 <- max(all_values)
     value_0 <- min(all_values)
 
@@ -48,6 +52,7 @@ get_experiment_result <- function(i) {
     mean_result_SA_0_1 <- mean_result_SA_0_1 + scale_data(cummax(SA_0_1_values), value_0, value_1)/M
     mean_result_SA_0_01 <- mean_result_SA_0_01 + scale_data(cummax(SA_0_01_values), value_0, value_1)/M
     mean_result_MH_S_0_9 <- mean_result_MH_S_0_9 + scale_data(cummax(MH_S_0_9_values), value_0, value_1)/M
+    mean_result_MH_S_thetaseq <- mean_result_MH_S_thetaseq + scale_data(cummax(MH_S_thetaseq_values), value_0, value_1)/M
   }
 
   list(
@@ -56,7 +61,8 @@ get_experiment_result <- function(i) {
     "mean_result_SA_0_3" = mean_result_SA_0_3,
     "mean_result_SA_0_1" = mean_result_SA_0_1,
     "mean_result_SA_0_01" = mean_result_SA_0_01,
-    "mean_result_MH_S_0_9" = mean_result_MH_S_0_9
+    "mean_result_MH_S_0_9" = mean_result_MH_S_0_9,
+    "mean_result_MH_S_thetaseq" = mean_result_MH_S_thetaseq
   )
 }
 
@@ -73,6 +79,7 @@ for (i in 1:length(MH_list_results)) {
     lines(restul_list$mean_result_SA_0_01, type="l", col = "green")
   }
   lines(restul_list$mean_result_MH_S_0_9, type="l", col = "red")
+  lines(restul_list$mean_result_MH_S_thetaseq, type="l", col = "magenta")
 
   legend_name <- c("MH", "RAND")
   if (plot_SA) {
