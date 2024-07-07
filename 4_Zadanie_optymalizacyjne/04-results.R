@@ -105,7 +105,8 @@ for (i in 1:length(MH_list_results)) {
     col = c("black", "blue", "pink", "red", "green", "magenta"), lty = 1
   )
 
-  print(all_experiments[[i]])
+  print(paste0("n = ", all_experiments[[i]]$n))
   print(paste0("p = ", attr(all_experiments[[i]]$true_perm, "size")))
+  print(paste0("cicle length = ", length(all_experiments[[i]]$true_perm[[1]])))
   readline(prompt="Press [enter] to continue")
 }
