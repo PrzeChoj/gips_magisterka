@@ -60,3 +60,7 @@ scale_data <- function(all_values, value_for_0, value_for_1) {
 
   (all_values - value_for_0) / (value_for_1 - value_for_0)
 }
+
+char_after_decimal <- function(number) {
+  substr(as.character(number), 3, nchar(as.character(number)))
+}

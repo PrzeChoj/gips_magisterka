@@ -1,4 +1,4 @@
-optimizer = "MH_S"
+optimizer <- "MH_S"
 available_cores <- 47
 F_call <- 10000
 #theta <- 0.9; theta_type <- paste0("Const_0_", substr(as.character(theta), 3, nchar(as.character(theta))))

@@ -1,4 +1,4 @@
-optimizer = "MH"
+optimizer <- "MH"
 available_cores <- 47
 F_call <- 10000
 
