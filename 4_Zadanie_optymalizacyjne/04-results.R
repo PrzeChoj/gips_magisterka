@@ -24,6 +24,14 @@ load(file.path(DATADIR, paste0("results_MH_S_cos_", F_call, ".rda"))) # MH_S_lis
 MH_S_list_results_cos <- MH_S_list_results
 load(file.path(DATADIR, paste0("results_MH_S_logcos_", F_call, ".rda"))) # MH_S_list_results
 MH_S_list_results_logcos <- MH_S_list_results
+load(file.path(DATADIR, paste0("results_MH_sq_a0_1_b0_1_F", F_call, ".rda"))) # MH_sq_list_results
+MH_sq_unequal_list_results <- MH_sq_list_results
+load(file.path(DATADIR, paste0("results_MH_sq_a0_2_b0_5_F", F_call, ".rda"))) # MH_sq_list_results
+MH_sq_equal_list_results <- MH_sq_list_results
+load(file.path(DATADIR, paste0("results_MH_sq_a0_9_b0_5_F", F_call, ".rda"))) # MH_sq_list_results
+MH_sq_loads_list_results <- MH_sq_list_results
+
+
 
 source(file.path(DATADIR, "..", "00-utils.R"))
 
@@ -37,6 +45,9 @@ get_experiment_result <- function(i) {
   mean_result_MH_S_lin <- numeric(F_call)
   mean_result_MH_S_cos <- numeric(F_call)
   mean_result_MH_S_logcos <- numeric(F_call)
+  mean_result_MH_sq <- numeric(F_call)
+  mean_result_MH_sq_equal <- numeric(F_call)
+  mean_result_MH_sq_loads <- numeric(F_call)
 
   for (j in 1:M) {
     MH_values <- attr(MH_list_results[[i]][[j]], "optimization_info")$log_posteriori_values
@@ -48,8 +59,11 @@ get_experiment_result <- function(i) {
     MH_S_lin_values <- attr(MH_S_list_results_lin[[i]][[j]], "optimization_info")$log_posteriori_values
     MH_S_cos_values <- attr(MH_S_list_results_cos[[i]][[j]], "optimization_info")$log_posteriori_values
     MH_S_logcos_values <- attr(MH_S_list_results_logcos[[i]][[j]], "optimization_info")$log_posteriori_values
+    MH_sq_values <- attr(MH_sq_unequal_list_results[[i]][[j]], "optimization_info")$log_posteriori_values
+    MH_sq_equal_values <- attr(MH_sq_equal_list_results[[i]][[j]], "optimization_info")$log_posteriori_values
+    MH_sq_loads_values <- attr(MH_sq_loads_list_results[[i]][[j]], "optimization_info")$log_posteriori_values
 
-    all_values <- c(MH_values, RAND_values, SA_0_3_values, SA_0_1_values, SA_0_01_values, MH_S_Const_0_9_values, MH_S_lin_values, MH_S_cos_values, MH_S_logcos_values)
+    all_values <- c(MH_values, RAND_values, SA_0_3_values, SA_0_1_values, SA_0_01_values, MH_S_Const_0_9_values, MH_S_lin_values, MH_S_cos_values, MH_S_logcos_values, MH_sq_values, MH_sq_equal_values, MH_sq_loads_values)
     value_1 <- max(all_values)
     value_0 <- min(all_values)
 
@@ -62,6 +76,9 @@ get_experiment_result <- function(i) {
     mean_result_MH_S_lin <- mean_result_MH_S_lin + scale_data(cummax(MH_S_lin_values), value_0, value_1)/M
     mean_result_MH_S_cos <- mean_result_MH_S_cos + scale_data(cummax(MH_S_cos_values), value_0, value_1)/M
     mean_result_MH_S_logcos <- mean_result_MH_S_logcos + scale_data(cummax(MH_S_logcos_values), value_0, value_1)/M
+    mean_result_MH_sq <- mean_result_MH_sq + scale_data(cummax(MH_sq_values), value_0, value_1)/M
+    mean_result_MH_sq_equal <- mean_result_MH_sq_equal + scale_data(cummax(MH_sq_equal_values), value_0, value_1)/M
+    mean_result_MH_sq_loads <- mean_result_MH_sq_loads + scale_data(cummax(MH_sq_loads_values), value_0, value_1)/M
   }
 
   list(
@@ -73,7 +90,10 @@ get_experiment_result <- function(i) {
     "mean_result_MH_S_Const_0_9" = mean_result_MH_S_Const_0_9,
     "mean_result_MH_S_lin" = mean_result_MH_S_lin,
     "mean_result_MH_S_cos" = mean_result_MH_S_cos,
-    "mean_result_MH_S_logcos" = mean_result_MH_S_logcos
+    "mean_result_MH_S_logcos" = mean_result_MH_S_logcos,
+    "mean_result_MH_sq" = mean_result_MH_sq,
+    "mean_result_MH_sq_equal" = mean_result_MH_sq_equal,
+    "mean_result_MH_sq_loads" = mean_result_MH_sq_loads
   )
 }
 
@@ -92,17 +112,19 @@ for (i in 1:length(MH_list_results)) {
   lines(restul_list$mean_result_MH_S_Const_0_9, type="l", col = "pink")
   lines(restul_list$mean_result_MH_S_lin, type="l", col = "red")
   lines(restul_list$mean_result_MH_S_cos, type="l", col = "green")
-  lines(restul_list$mean_result_MH_S_logcos, type="l", col = "magenta")
+  lines(restul_list$mean_result_MH_sq, type="l", col = "magenta")
+  lines(restul_list$mean_result_MH_sq_equal, type="l", col = "grey")
+  lines(restul_list$mean_result_MH_sq_loads, type="l", col = "gold")
 
   legend_name <- c("MH", "RAND")
   if (plot_SA) {
     legend_name <- c(legend_name, "SA 0.3", "SA 0.1", "SA 0.01")
   }
-  legend_name <- c(legend_name, "MH_S Const 0.9", "MH_S lin", "MH_S cos", "MH_S logcos")
+  legend_name <- c(legend_name, "MH_S Const 0.9", "MH_S lin", "MH_S cos", "MH_sq", "MH_sq_equal", "MH_sq_loads")
 
   legend(
     1, 0.99, legend = legend_name,
-    col = c("black", "blue", "pink", "red", "green", "magenta"), lty = 1
+    col = c("black", "blue", "pink", "red", "green", "magenta", "grey", "gold"), lty = 1
   )
 
   print(paste0("n = ", all_experiments[[i]]$n))
