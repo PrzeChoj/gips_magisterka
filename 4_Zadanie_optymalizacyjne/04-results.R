@@ -1,134 +1,133 @@
 DATADIR <- file.path(".", "4_Zadanie_optymalizacyjne", "data")
 
-plot_SA <- FALSE
-
 library(gips)
 
 F_call <- 10000
 
+data_amount <- 12
+my_data <- list()
+data_name <- c()
+
 load(file.path(DATADIR, "all_experiments.rda")) # all_experiments
 load(file.path(DATADIR, "df_random_perm_log_posteriori.rda")) # df_random_perm_log_posteriori
-load(file.path(DATADIR, paste0("results_MH_", F_call, ".rda"))) # MH_list_results
-load(file.path(DATADIR, paste0("results_RAND_", F_call, ".rda"))) # RAND_list_results
-load(file.path(DATADIR, paste0("results_SA_0_3_", F_call, ".rda"))) # SA_list_results
-SA_list_results_0_3 <- SA_list_results
-load(file.path(DATADIR, paste0("results_SA_0_1_", F_call, ".rda"))) # SA_list_results
-SA_list_results_0_1 <- SA_list_results
-load(file.path(DATADIR, paste0("results_SA_0_01_", F_call, ".rda"))) # SA_list_results
-SA_list_results_0_01 <- SA_list_results
-load(file.path(DATADIR, paste0("results_MH_S_Const_0_9_", F_call, ".rda"))) # MH_S_list_results
-MH_S_list_results_Const_0_9 <- MH_S_list_results
-load(file.path(DATADIR, paste0("results_MH_S_lin_", F_call, ".rda"))) # MH_S_list_results
-MH_S_list_results_lin <- MH_S_list_results
-load(file.path(DATADIR, paste0("results_MH_S_cos_", F_call, ".rda"))) # MH_S_list_results
-MH_S_list_results_cos <- MH_S_list_results
-load(file.path(DATADIR, paste0("results_MH_S_logcos_", F_call, ".rda"))) # MH_S_list_results
-MH_S_list_results_logcos <- MH_S_list_results
-load(file.path(DATADIR, paste0("results_MH_sq_a0_1_b0_1_F", F_call, ".rda"))) # MH_sq_list_results
-MH_sq_unequal_list_results <- MH_sq_list_results
-load(file.path(DATADIR, paste0("results_MH_sq_a0_2_b0_5_F", F_call, ".rda"))) # MH_sq_list_results
-MH_sq_equal_list_results <- MH_sq_list_results
-load(file.path(DATADIR, paste0("results_MH_sq_a0_9_b0_5_F", F_call, ".rda"))) # MH_sq_list_results
-MH_sq_loads_list_results <- MH_sq_list_results
 
+load(file.path(DATADIR, paste0("results_MH_", F_call, ".rda"))) # MH_list_results
+my_data[[length(my_data) + 1]] <- MH_list_results
+data_name[length(data_name) + 1] <- "MH"
+load(file.path(DATADIR, paste0("results_RAND_", F_call, ".rda"))) # RAND_list_results
+my_data[[length(my_data) + 1]] <- RAND_list_results
+data_name[length(data_name) + 1] <- "RAND"
+load(file.path(DATADIR, paste0("results_SA_0_3_", F_call, ".rda"))) # SA_list_results
+my_data[[length(my_data) + 1]] <- SA_list_results
+data_name[length(data_name) + 1] <- "SA_0_3"
+load(file.path(DATADIR, paste0("results_SA_0_1_", F_call, ".rda"))) # SA_list_results
+my_data[[length(my_data) + 1]] <- SA_list_results
+data_name[length(data_name) + 1] <- "SA_0_1"
+load(file.path(DATADIR, paste0("results_SA_0_01_", F_call, ".rda"))) # SA_list_results
+my_data[[length(my_data) + 1]] <- SA_list_results
+data_name[length(data_name) + 1] <- "SA_0_01"
+load(file.path(DATADIR, paste0("results_MH_S_Const_0_9_", F_call, ".rda"))) # MH_S_list_results
+my_data[[length(my_data) + 1]] <- MH_S_list_results
+data_name[length(data_name) + 1] <- "MH_S_Const_0_9"
+load(file.path(DATADIR, paste0("results_MH_S_lin_", F_call, ".rda"))) # MH_S_list_results
+my_data[[length(my_data) + 1]] <- MH_S_list_results
+data_name[length(data_name) + 1] <- "MH_S_lin"
+load(file.path(DATADIR, paste0("results_MH_S_cos_", F_call, ".rda"))) # MH_S_list_results
+my_data[[length(my_data) + 1]] <- MH_S_list_results
+data_name[length(data_name) + 1] <- "MH_S_cos"
+load(file.path(DATADIR, paste0("results_MH_S_logcos_", F_call, ".rda"))) # MH_S_list_results
+my_data[[length(my_data) + 1]] <- MH_S_list_results
+data_name[length(data_name) + 1] <- "MH_S_logcos"
+load(file.path(DATADIR, paste0("results_MH_sq_a0_1_b0_1_F", F_call, ".rda"))) # MH_sq_list_results
+my_data[[length(my_data) + 1]] <- MH_sq_list_results
+data_name[length(data_name) + 1] <- "MH_sq_unequal"
+load(file.path(DATADIR, paste0("results_MH_sq_a0_2_b0_5_F", F_call, ".rda"))) # MH_sq_list_results
+my_data[[length(my_data) + 1]] <- MH_sq_list_results
+data_name[length(data_name) + 1] <- "MH_sq_equal"
+load(file.path(DATADIR, paste0("results_MH_sq_a0_9_b0_5_F", F_call, ".rda"))) # MH_sq_list_results
+my_data[[length(my_data) + 1]] <- MH_sq_list_results
+data_name[length(data_name) + 1] <- "MH_sq_loads"
+
+stopifnot(length(my_data) == data_amount)
+stopifnot(length(data_name) == data_amount)
 
 
 source(file.path(DATADIR, "..", "00-utils.R"))
 
 get_experiment_result <- function(i) {
-  mean_result_MH <- numeric(F_call)
-  mean_result_RAND <- numeric(F_call)
-  mean_result_SA_0_3 <- numeric(F_call)
-  mean_result_SA_0_1 <- numeric(F_call)
-  mean_result_SA_0_01 <- numeric(F_call)
-  mean_result_MH_S_Const_0_9 <- numeric(F_call)
-  mean_result_MH_S_lin <- numeric(F_call)
-  mean_result_MH_S_cos <- numeric(F_call)
-  mean_result_MH_S_logcos <- numeric(F_call)
-  mean_result_MH_sq <- numeric(F_call)
-  mean_result_MH_sq_equal <- numeric(F_call)
-  mean_result_MH_sq_loads <- numeric(F_call)
+  this_result_length <- data_amount * 2
+
+  my_results <- vector('list', this_result_length)
+
+  for (k in 1:data_amount) {
+    my_results[[2*k - 1]] <- numeric(F_call)
+    my_results[[2*k]] <- numeric(M)
+  }
 
   for (j in 1:M) {
-    MH_values <- attr(MH_list_results[[i]][[j]], "optimization_info")$log_posteriori_values
-    RAND_values <- attr(RAND_list_results[[i]][[j]], "optimization_info")$log_posteriori_values
-    SA_0_3_values <- attr(SA_list_results_0_3[[i]][[j]], "optimization_info")$log_posteriori_values
-    SA_0_1_values <- attr(SA_list_results_0_1[[i]][[j]], "optimization_info")$log_posteriori_values
-    SA_0_01_values <- attr(SA_list_results_0_01[[i]][[j]], "optimization_info")$log_posteriori_values
-    MH_S_Const_0_9_values <- attr(MH_S_list_results_Const_0_9[[i]][[j]], "optimization_info")$log_posteriori_values
-    MH_S_lin_values <- attr(MH_S_list_results_lin[[i]][[j]], "optimization_info")$log_posteriori_values
-    MH_S_cos_values <- attr(MH_S_list_results_cos[[i]][[j]], "optimization_info")$log_posteriori_values
-    MH_S_logcos_values <- attr(MH_S_list_results_logcos[[i]][[j]], "optimization_info")$log_posteriori_values
-    MH_sq_values <- attr(MH_sq_unequal_list_results[[i]][[j]], "optimization_info")$log_posteriori_values
-    MH_sq_equal_values <- attr(MH_sq_equal_list_results[[i]][[j]], "optimization_info")$log_posteriori_values
-    MH_sq_loads_values <- attr(MH_sq_loads_list_results[[i]][[j]], "optimization_info")$log_posteriori_values
+    my_values <- vector('list', data_amount)
+    for (k in 1:data_amount) {
+      my_values[[k]] <- attr(my_data[[k]][[i]][[j]], "optimization_info")$log_posteriori_values
+    }
 
-    all_values <- c(MH_values, RAND_values, SA_0_3_values, SA_0_1_values, SA_0_01_values, MH_S_Const_0_9_values, MH_S_lin_values, MH_S_cos_values, MH_S_logcos_values, MH_sq_values, MH_sq_equal_values, MH_sq_loads_values)
-    value_1 <- max(all_values)
-    value_0 <- min(all_values)
+    value_1 <- max(sapply(my_values, max))
+    value_0 <- min(sapply(my_values, min))
 
-    mean_result_MH <- mean_result_MH + scale_data(cummax(MH_values), value_0, value_1)/M
-    mean_result_RAND <- mean_result_RAND + scale_data(cummax(RAND_values), value_0, value_1)/M
-    mean_result_SA_0_3 <- mean_result_SA_0_3 + scale_data(cummax(SA_0_3_values), value_0, value_1)/M
-    mean_result_SA_0_1 <- mean_result_SA_0_1 + scale_data(cummax(SA_0_1_values), value_0, value_1)/M
-    mean_result_SA_0_01 <- mean_result_SA_0_01 + scale_data(cummax(SA_0_01_values), value_0, value_1)/M
-    mean_result_MH_S_Const_0_9 <- mean_result_MH_S_Const_0_9 + scale_data(cummax(MH_S_Const_0_9_values), value_0, value_1)/M
-    mean_result_MH_S_lin <- mean_result_MH_S_lin + scale_data(cummax(MH_S_lin_values), value_0, value_1)/M
-    mean_result_MH_S_cos <- mean_result_MH_S_cos + scale_data(cummax(MH_S_cos_values), value_0, value_1)/M
-    mean_result_MH_S_logcos <- mean_result_MH_S_logcos + scale_data(cummax(MH_S_logcos_values), value_0, value_1)/M
-    mean_result_MH_sq <- mean_result_MH_sq + scale_data(cummax(MH_sq_values), value_0, value_1)/M
-    mean_result_MH_sq_equal <- mean_result_MH_sq_equal + scale_data(cummax(MH_sq_equal_values), value_0, value_1)/M
-    mean_result_MH_sq_loads <- mean_result_MH_sq_loads + scale_data(cummax(MH_sq_loads_values), value_0, value_1)/M
+    my_results
+    for (k in 1:data_amount) {
+      my_results[[2*k - 1]] <- my_results[[2*k - 1]] + scale_data(cummax(my_values[[k]]), value_0, value_1)/M
+      my_results[[2*k]][j] <- max(my_values[[k]])
+    }
   }
 
-  list(
-    "mean_result_MH" = mean_result_MH,
-    "mean_result_RAND" = mean_result_RAND,
-    "mean_result_SA_0_3" = mean_result_SA_0_3,
-    "mean_result_SA_0_1" = mean_result_SA_0_1,
-    "mean_result_SA_0_01" = mean_result_SA_0_01,
-    "mean_result_MH_S_Const_0_9" = mean_result_MH_S_Const_0_9,
-    "mean_result_MH_S_lin" = mean_result_MH_S_lin,
-    "mean_result_MH_S_cos" = mean_result_MH_S_cos,
-    "mean_result_MH_S_logcos" = mean_result_MH_S_logcos,
-    "mean_result_MH_sq" = mean_result_MH_sq,
-    "mean_result_MH_sq_equal" = mean_result_MH_sq_equal,
-    "mean_result_MH_sq_loads" = mean_result_MH_sq_loads
-  )
+  names(my_results) <- vector('character', this_result_length)
+
+  for (k in 1:data_amount) {
+    names(my_results)[2*k - 1] <- paste0("mean_result_", data_name[k])
+    names(my_results)[2*k] <- paste0("max_result_", data_name[k])
+  }
+
+  my_results
 }
 
+plot_results <- function(type_plot) {
+  for (i in 1:length(MH_list_results)) {
+    restul_list <- get_experiment_result(i)
 
+    plot(restul_list$mean_result_MH, type = "l", log = "x", ylim = c(0, 1))
+    lines(restul_list$mean_result_RAND, type = "l", col = "blue")
+    legend_name <- c("MH", "RAND")
 
-for (i in 1:length(MH_list_results)) {
-  restul_list <- get_experiment_result(i)
+    if (type_plot == "SA") {
+      lines(restul_list$mean_result_SA_0_3, type = "l", col = "magenta")
+      lines(restul_list$mean_result_SA_0_1, type = "l", col = "red")
+      lines(restul_list$mean_result_SA_0_01, type = "l", col = "green")
+      legend_name <- c(legend_name, "SA 0.3", "SA 0.1", "SA 0.01")
+    } else if (type_plot == "MH_S") {
+      lines(restul_list$mean_result_MH_S_Const_0_9, type = "l", col = "magenta")
+      lines(restul_list$mean_result_MH_S_lin, type = "l", col = "red")
+      lines(restul_list$mean_result_MH_S_cos, type = "l", col = "green")
+      legend_name <- c(legend_name, "MH_S Const 0.9", "MH_S lin", "MH_S cos")
+    } else if (type_plot == "MH_sq") {
+      lines(restul_list$mean_result_MH_sq, type = "l", col = "magenta")
+      lines(restul_list$mean_result_MH_sq_equal, type = "l", col = "red")
+      lines(restul_list$mean_result_MH_sq_loads, type = "l", col = "green")
+      legend_name <- c(legend_name, "MH_sq", "MH_sq_equal", "MH_sq_loads")
+    }
 
-  plot(restul_list$mean_result_MH, type="l", log = "x", ylim = c(0, 1))
-  lines(restul_list$mean_result_RAND, type="l", col = "blue")
-  if (plot_SA) {
-    lines(restul_list$mean_result_SA_0_3, type="l", col = "pink")
-    lines(restul_list$mean_result_SA_0_1, type="l", col = "red")
-    lines(restul_list$mean_result_SA_0_01, type="l", col = "green")
+    legend(
+      1, 0.99, legend = legend_name,
+      col = c("black", "blue", "magenta", "red", "green"),
+      lty = 1, cex = 0.5
+    )
+
+    print(paste0("n = ", all_experiments[[i]]$n))
+    print(paste0("p = ", attr(all_experiments[[i]]$true_perm, "size")))
+    print(paste0("cicle length = ", length(all_experiments[[i]]$true_perm[[1]])))
+    readline(prompt="Press [enter] to continue")
   }
-  lines(restul_list$mean_result_MH_S_Const_0_9, type="l", col = "pink")
-  lines(restul_list$mean_result_MH_S_lin, type="l", col = "red")
-  lines(restul_list$mean_result_MH_S_cos, type="l", col = "green")
-  lines(restul_list$mean_result_MH_sq, type="l", col = "magenta")
-  lines(restul_list$mean_result_MH_sq_equal, type="l", col = "grey")
-  lines(restul_list$mean_result_MH_sq_loads, type="l", col = "gold")
-
-  legend_name <- c("MH", "RAND")
-  if (plot_SA) {
-    legend_name <- c(legend_name, "SA 0.3", "SA 0.1", "SA 0.01")
-  }
-  legend_name <- c(legend_name, "MH_S Const 0.9", "MH_S lin", "MH_S cos", "MH_sq", "MH_sq_equal", "MH_sq_loads")
-
-  legend(
-    1, 0.99, legend = legend_name,
-    col = c("black", "blue", "pink", "red", "green", "magenta", "grey", "gold"), lty = 1
-  )
-
-  print(paste0("n = ", all_experiments[[i]]$n))
-  print(paste0("p = ", attr(all_experiments[[i]]$true_perm, "size")))
-  print(paste0("cicle length = ", length(all_experiments[[i]]$true_perm[[1]])))
-  readline(prompt="Press [enter] to continue")
 }
+
+plot_results("SA")
+plot_results("MH_S")
+plot_results("MH_sq")
