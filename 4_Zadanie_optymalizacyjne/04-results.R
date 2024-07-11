@@ -55,7 +55,7 @@ stopifnot(length(data_name) == data_amount)
 source(file.path(DATADIR, "..", "00-utils.R"))
 
 get_experiment_result <- function(i) {
-  this_result_length <- data_amount * 2
+  this_result_length <- data_amount * 2 + 1
 
   my_results <- vector('list', this_result_length)
 
@@ -63,6 +63,8 @@ get_experiment_result <- function(i) {
     my_results[[2*k - 1]] <- numeric(F_call)
     my_results[[2*k]] <- numeric(M)
   }
+  my_results[[2*data_amount + 1]] <- numeric(M)
+
 
   for (j in 1:M) {
     my_values <- vector('list', data_amount)
@@ -73,11 +75,17 @@ get_experiment_result <- function(i) {
     value_1 <- max(sapply(my_values, max))
     value_0 <- min(sapply(my_values, min))
 
-    my_results
     for (k in 1:data_amount) {
       my_results[[2*k - 1]] <- my_results[[2*k - 1]] + scale_data(cummax(my_values[[k]]), value_0, value_1)/M
       my_results[[2*k]][j] <- max(my_values[[k]])
     }
+    S <- attr(my_data[[1]][[i]][[j]], "S")
+    number_of_observations <- attr(my_data[[1]][[i]][[j]], "number_of_observations")
+    g <- gips(
+      S, number_of_observations, was_mean_estimated = FALSE,
+      perm = all_experiments[[i]]$true_perm
+    )
+    my_results[[2*data_amount + 1]][j] <- log_posteriori_of_gips(g)
   }
 
   names(my_results) <- vector('character', this_result_length)
@@ -86,32 +94,45 @@ get_experiment_result <- function(i) {
     names(my_results)[2*k - 1] <- paste0("mean_result_", data_name[k])
     names(my_results)[2*k] <- paste0("max_result_", data_name[k])
   }
+  names(my_results)[2*data_amount + 1] <- "true_perm_value"
 
   my_results
 }
 
+i <- 26
+print(paste0("n = ", all_experiments[[i]]$n))
+print(paste0("p = ", attr(all_experiments[[i]]$true_perm, "size")))
+print(paste0("cicle length = ", length(all_experiments[[i]]$true_perm[[1]])))
+
+result_list <- get_experiment_result(i)
+result_list$true_perm_value - result_list$max_result_MH
+result_list$true_perm_value - result_list$max_result_MH_S_cos
+exp(result_list$max_result_MH_S_cos - result_list$max_result_MH)
+exp(result_list$max_result_MH_S_cos - result_list$max_result_MH_S_lin)
+exp(mean(result_list$max_result_MH_S_cos - result_list$max_result_MH_S_lin))
+
 plot_results <- function(type_plot) {
   for (i in 1:length(MH_list_results)) {
-    restul_list <- get_experiment_result(i)
+    result_list <- get_experiment_result(i)
 
-    plot(restul_list$mean_result_MH, type = "l", log = "x", ylim = c(0, 1))
-    lines(restul_list$mean_result_RAND, type = "l", col = "blue")
+    plot(result_list$mean_result_MH, type = "l", log = "x", ylim = c(0, 1))
+    lines(result_list$mean_result_RAND, type = "l", col = "blue")
     legend_name <- c("MH", "RAND")
 
     if (type_plot == "SA") {
-      lines(restul_list$mean_result_SA_0_3, type = "l", col = "magenta")
-      lines(restul_list$mean_result_SA_0_1, type = "l", col = "red")
-      lines(restul_list$mean_result_SA_0_01, type = "l", col = "green")
+      lines(result_list$mean_result_SA_0_3, type = "l", col = "magenta")
+      lines(result_list$mean_result_SA_0_1, type = "l", col = "red")
+      lines(result_list$mean_result_SA_0_01, type = "l", col = "green")
       legend_name <- c(legend_name, "SA 0.3", "SA 0.1", "SA 0.01")
     } else if (type_plot == "MH_S") {
-      lines(restul_list$mean_result_MH_S_Const_0_9, type = "l", col = "magenta")
-      lines(restul_list$mean_result_MH_S_lin, type = "l", col = "red")
-      lines(restul_list$mean_result_MH_S_cos, type = "l", col = "green")
+      lines(result_list$mean_result_MH_S_Const_0_9, type = "l", col = "magenta")
+      lines(result_list$mean_result_MH_S_lin, type = "l", col = "red")
+      lines(result_list$mean_result_MH_S_cos, type = "l", col = "green")
       legend_name <- c(legend_name, "MH_S Const 0.9", "MH_S lin", "MH_S cos")
     } else if (type_plot == "MH_sq") {
-      lines(restul_list$mean_result_MH_sq, type = "l", col = "magenta")
-      lines(restul_list$mean_result_MH_sq_equal, type = "l", col = "red")
-      lines(restul_list$mean_result_MH_sq_loads, type = "l", col = "green")
+      lines(result_list$mean_result_MH_sq, type = "l", col = "magenta")
+      lines(result_list$mean_result_MH_sq_equal, type = "l", col = "red")
+      lines(result_list$mean_result_MH_sq_loads, type = "l", col = "green")
       legend_name <- c(legend_name, "MH_sq", "MH_sq_equal", "MH_sq_loads")
     }
 
@@ -121,6 +142,7 @@ plot_results <- function(type_plot) {
       lty = 1, cex = 0.5
     )
 
+    ic(i)
     print(paste0("n = ", all_experiments[[i]]$n))
     print(paste0("p = ", attr(all_experiments[[i]]$true_perm, "size")))
     print(paste0("cicle length = ", length(all_experiments[[i]]$true_perm[[1]])))
