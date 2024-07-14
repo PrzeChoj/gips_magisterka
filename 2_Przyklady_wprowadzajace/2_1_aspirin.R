@@ -4,8 +4,8 @@ ggplot2::theme_set(ggplot2::theme_bw())
 # This will add labels and numbers inside tiles
 plot_cosmetic_modifications <- function(gg_plot_object) {
   my_col_names <- c(
-    "deaths after placebo", "deaths after Aspirin",
-    "treated with placebo", "treated with Aspirin"
+    "śmierć po placebo", "śmierć po aspirynie",
+    "leczony placebo", "leczony aspiryną"
   )
 
   suppressMessages( # message from ggplot2
@@ -60,11 +60,11 @@ S <- cov(Z)
 g <- gips(S, n)
 my_aspirin_id_ggplot <- plot_cosmetic_modifications(plot(g, type = "heatmap")) +
   ggplot2::labs(
-    title = "Standard MLE estimator",
-    subtitle = "of the covariance matrix"
+    title = "Standardowy estymator MLE",
+    subtitle = "macierzy kowariancji"
   )
 my_aspirin_id_ggplot
-# Figure 1:
+# Figure 2.1:
 ggplot2::ggsave(
   file.path(".", "plots", "exp_aspirin_id.png"),
   my_aspirin_id_ggplot,
@@ -87,9 +87,13 @@ compare_posteriories_of_perms(g_MAP, "()")
 
 S_projected <- project_matrix(S, g_MAP)
 
-my_aspirin_perm_ggplot <- plot_cosmetic_modifications(plot(g_MAP, type = "heatmap"))
+my_aspirin_perm_ggplot <- plot_cosmetic_modifications(plot(g_MAP, type = "heatmap")) +
+  ggplot2::labs(
+    title = "Estymowana macierz kowariancji",
+    subtitle = paste("zrzutowana na przestrzeń", as.character(g_MAP))
+  )
 my_aspirin_perm_ggplot
-# Figure 2:
+# Figure 2.2:
 ggplot2::ggsave(
   file.path(".", "plots", "exp_aspirin_perm.png"),
   my_aspirin_perm_ggplot,

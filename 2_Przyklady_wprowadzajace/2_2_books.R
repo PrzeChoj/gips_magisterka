@@ -3,7 +3,7 @@ ggplot2::theme_set(ggplot2::theme_bw())
 
 # This will add labels and numbers inside tiles
 plot_cosmetic_modifications <- function(gg_plot_object) {
-  my_col_names <- c("thick", "height", "breadth")
+  my_col_names <- c("grubość", "wysokość", "szerokość")
 
   suppressMessages( # message from ggplot2
     out <- gg_plot_object +
@@ -53,11 +53,11 @@ S <- cov(Z)
 g <- gips(S, number_of_observations)
 my_books_id_ggplot <- plot_cosmetic_modifications(plot(g, type = "heatmap")) +
   ggplot2::labs(
-    title = "Standard MLE estimator",
-    subtitle = "of the covariance matrix"
+    title = "Standardowy estymator MLE",
+    subtitle = "macierzy kowariancji"
   )
 my_books_id_ggplot
-# Figure 3:
+# Figure 2.3:
 ggplot2::ggsave(
   file.path(".", "plots", "exp_books_id.png"),
   my_books_id_ggplot,
@@ -74,9 +74,13 @@ g_MAP <- find_MAP(g,
 get_probabilities_from_gips(g_MAP)
 g_MAP
 
-my_books_map_ggplot <- plot_cosmetic_modifications(plot(g_MAP, type = "heatmap"))
+my_books_map_ggplot <- plot_cosmetic_modifications(plot(g_MAP, type = "heatmap")) +
+  ggplot2::labs(
+    title = "Estymowana macierz kowariancji",
+    subtitle = paste("zrzutowana na przestrzeń", as.character(g_MAP))
+  )
 my_books_map_ggplot
-# Figure 4:
+# Figure 2.4:
 ggplot2::ggsave(
   file.path(".", "plots", "exp_books_map.png"),
   my_books_map_ggplot,

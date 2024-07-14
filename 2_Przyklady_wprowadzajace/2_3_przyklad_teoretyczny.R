@@ -23,8 +23,26 @@ Z <- withr::with_seed(2022,
 )
 # End of prepare model
 
-plot(gips(sigma_matrix, 1), type = "heatmap") +
-  ggplot2::labs(title = "To jest prawdziwa macierz kowariancji\nChcemy ją estymować w oparciu o jedynie n = 4 obserwacje", x = "", y = "")
+prawdziwa_CoV_ggplot <- plot(gips(sigma_matrix, 1), type = "heatmap") +
+  ggplot2::labs(
+    title = "To jest prawdziwa macierz kowariancji",
+    subtitle = "Chcemy ją estymować w oparciu o jedynie n = 4 obserwacje", x = "", y = "",
+    fill = "kowariancja") +
+  ggplot2::theme(
+    plot.title = ggplot2::element_text(face = "bold", size = 18),
+    plot.subtitle = ggplot2::element_text(face = "bold", size = 14),
+    legend.text = ggplot2::element_text(face = "bold", size = 10),
+    axis.text.y = ggplot2::element_text(face = "bold", size = 17),
+    axis.text.x = ggplot2::element_text(face = "bold", size = 17)
+  )
+prawdziwa_CoV_ggplot
+# Figure 2.5:
+ggplot2::ggsave(
+  file.path(".", "plots", "exp_theory_real.png"),
+  prawdziwa_CoV_ggplot,
+  width = 21.3, height = 18,
+  units = "cm"
+)
 
 dim(Z)
 number_of_observations <- nrow(Z) # 4
@@ -35,10 +53,27 @@ S <- (t(Z) %*% Z) / number_of_observations
 
 g <- gips(S, number_of_observations, was_mean_estimated = FALSE)
 
-plot(g, type = "heatmap") + ggplot2::ggtitle("Zwykły estymator macierzy kowariancji")
+S_CoV_ggplot <- plot(g, type = "heatmap") +
+  ggplot2::labs(
+    title = "Zwykły estymator macierzy kowariancji",
+    fill = "kowariancja") +
+  ggplot2::theme(
+    plot.title = ggplot2::element_text(face = "bold", size = 18),
+    plot.subtitle = ggplot2::element_text(face = "bold", size = 14),
+    legend.text = ggplot2::element_text(face = "bold", size = 10),
+    axis.text.y = ggplot2::element_text(face = "bold", size = 17),
+    axis.text.x = ggplot2::element_text(face = "bold", size = 17)
+  )
+S_CoV_ggplot
+# Figure 2.6:
+ggplot2::ggsave(
+  file.path(".", "plots", "exp_theory_S.png"),
+  S_CoV_ggplot,
+  width = 21.3, height = 18,
+  units = "cm"
+)
 
 g_map <- find_MAP(g, optimizer = "brute_force")
-
 g_map
 
 summary(g_map)$n0
@@ -48,4 +83,22 @@ S_projected <- project_matrix(S, g_map)
 S_projected
 
 # Plot the found matrix:
-plot(g_map, type = "heatmap") + ggplot2::ggtitle("Macierz kowariancji wyestymowana przy pomocy `gips`")
+S_gips_CoV_ggplot <- plot(g_map, type = "heatmap") +
+  ggplot2::labs(
+    title = "Macierz kowariancji wyestymowana przy pomocy `gips`",
+    fill = "kowariancja") +
+  ggplot2::theme(
+    plot.title = ggplot2::element_text(face = "bold", size = 18),
+    plot.subtitle = ggplot2::element_text(face = "bold", size = 14),
+    legend.text = ggplot2::element_text(face = "bold", size = 10),
+    axis.text.y = ggplot2::element_text(face = "bold", size = 17),
+    axis.text.x = ggplot2::element_text(face = "bold", size = 17)
+  )
+S_gips_CoV_ggplot
+# Figure 2.7:
+ggplot2::ggsave(
+  file.path(".", "plots", "exp_theory_S_gips.png"),
+  S_gips_CoV_ggplot,
+  width = 21.3, height = 18,
+  units = "cm"
+)
