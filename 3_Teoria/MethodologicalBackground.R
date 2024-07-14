@@ -25,7 +25,7 @@ get_plotted_matrix <- function(my_matrix, my_title) {
 }
 
 
-# Section 2.1
+# Section 3.1
 
 set.seed(2022)
 sigma_matrix <- matrix(
@@ -50,10 +50,10 @@ on_diagonal_element <- mean(S[row(S) == col(S)])
 S_full <- matrix(rep(off_diagonal_element, p * p), nrow = p) + diag(on_diagonal_element - off_diagonal_element, p)
 my_full_symmetry_ggplot <- get_plotted_matrix(
   S_full,
-  bquote(atop("Example of a matrix" ~ bold("with full"), "permutation symmetry           "))
+  bquote(atop("Przykład macierzy" ~ bold("z pełną"), "permutacyjną symetrią      "))
 )
 my_full_symmetry_ggplot
-# Figure 5 top left:
+# Figure 3.1 top left:
 ggplot2::ggsave(
   file.path(".", "plots", "Methodological_Background_full_symmetry.png"),
   my_full_symmetry_ggplot,
@@ -66,10 +66,10 @@ S_long <- project_matrix(S, "(12345)")
 
 my_full_long_perm_ggplot <- get_plotted_matrix(
   S_long,
-  bquote(atop("Example of a matrix" ~ bold("with long"), "permutation symmetry             "))
+  bquote(atop("Przykład macierzy" ~ bold("z długą") ~ "cykliczną", "permutacyjną symetrią                      "))
 )
 my_full_long_perm_ggplot
-# Figure 5 top right:
+# Figure 3.1 top right:
 ggplot2::ggsave(
   file.path(".", "plots", "Methodological_Background_long_perm.png"),
   my_full_long_perm_ggplot,
@@ -82,10 +82,10 @@ S_short <- project_matrix(S, "(123)")
 
 my_short_perm_ggplot <- get_plotted_matrix(
   S_short,
-  bquote(atop("Example of a matrix" ~ bold("with short"), "permutation symmetry              "))
+  bquote(atop("Przykład macierzy" ~ bold("z krótką") ~ "cykliczną", "permutacyjną symetrią                       "))
 )
 my_short_perm_ggplot
-# Figure 5 bottom left:
+# Figure 3.1 bottom left:
 ggplot2::ggsave(
   file.path(".", "plots", "Methodological_Background_short_perm.png"),
   my_short_perm_ggplot,
@@ -96,10 +96,10 @@ ggplot2::ggsave(
 # no symmetry
 my_no_perm_ggplot <- get_plotted_matrix(
   S,
-  bquote(atop("Example of a matrix" ~ bold("without"), "permutation symmetry          "))
+  bquote(atop("Przykład macierzy" ~ bold("bez"), "permutacyjnej symetrii"))
 )
 my_no_perm_ggplot
-# Figure 5 bottom right:
+# Figure 3.1 bottom right:
 ggplot2::ggsave(
   file.path(".", "plots", "Methodological_Background_no_perm.png"),
   my_no_perm_ggplot,
@@ -108,12 +108,12 @@ ggplot2::ggsave(
 )
 
 
-# Section 2.2
+# Section 3.2
 g <- gips(S, n, perm = "(12345)", was_mean_estimated = FALSE)
 summary(g)$n_parameters
 
 
-# Section 2.3
+# Section 3.3
 g <- gips(S, n, perm = "(12345)", was_mean_estimated = FALSE)
 summary(g)$n0
 
@@ -123,7 +123,7 @@ summary(g)$n0
 S_projected <- project_matrix(S, "(12345)")
 
 
-# Section 2.4
+# Section 3.4
 g <- gips(S, n, perm = "(12345)", was_mean_estimated = FALSE)
 exp(gips::log_posteriori_of_gips(g))
 
@@ -133,7 +133,7 @@ exp(gips::log_posteriori_of_gips(g2))
 compare_posteriories_of_perms(g, "(123)")
 
 
-# Section 2.5
+# Section 3.5
 g <- gips(S, n, was_mean_estimated = FALSE)
 
 set.seed(2022)
