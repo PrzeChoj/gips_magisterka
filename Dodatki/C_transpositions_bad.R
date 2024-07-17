@@ -1,5 +1,4 @@
 library(gips)
-options(scipen = 999)
 
 n <- 500
 p <- 6
@@ -18,7 +17,8 @@ get_S_from_sigma <- function(sigma_matrix) {
 get_g_BF <- function(S) {
   g <- gips(S, n, was_mean_estimated = FALSE)
   g_BF <- find_MAP(
-    g, optimizer = "BF", save_all_perms = TRUE, return_probabilities = TRUE
+    g, optimizer = "BF",
+    save_all_perms = TRUE, return_probabilities = TRUE
   )
 
   g_BF
@@ -32,6 +32,17 @@ get_g_MH <- function(S) {
   )
 
   g_MH
+}
+
+get_g_MH_sqrt <- function(S) {
+  g <- gips(S, n, was_mean_estimated = FALSE)
+  g_MH_sqrt <- find_MAP(
+    g, max_iter = 10000, optimizer = "Metropolis_Hastings_with_sqrt",
+    save_all_perms = TRUE,
+    alpha = 0.2, beta = 0.5
+  )
+
+  g_MH_sqrt
 }
 
 
@@ -58,9 +69,6 @@ head(get_probabilities_from_gips(g_BF), 8)
 g_MH <- get_g_MH(S)
 get_probabilities_from_gips(g_MH)
 
-my_list <- get_probabilities_from_gips(g_BF)
-my_list[["()"]] / my_list[["(1,3)"]] # 646 816 878 672 322 112 782 336 > 10^22
-
 
 #####
 # Example that will stop at (1,3)(2,4)
@@ -84,6 +92,9 @@ head(get_probabilities_from_gips(g_BF), 8)
 
 g_MH <- get_g_MH(S)
 get_probabilities_from_gips(g_MH)
+
+g_MH_sqrt <- get_g_MH_sqrt(S)
+g_MH_sqrt
 
 
 #####
