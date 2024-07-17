@@ -1,11 +1,13 @@
 library(gips)
 library(ggplot2)
 
+my_seed <- 2024
+set.seed(my_seed)
+
 n <- 500
 p <- 6
 mu <- numeric(p)
 
-my_seed <- 2022
 
 get_S_from_sigma <- function(sigma_matrix) {
   Z <- withr::with_seed(my_seed,
@@ -46,11 +48,10 @@ get_g_MH_sqrt <- function(S) {
   g_MH_sqrt
 }
 
-plot_matrix <- function(sigma_matrix, str_permutation) {
+plot_matrix <- function(sigma_matrix, title) {
   gips:::pretty_plot_matrix(sigma_matrix) +
     labs(
-      title = "Prawdziwa macierz kowariancji",
-      subtitle = paste("niezmiennicza względem permutacji", str_permutation),
+      title = title,
       fill = "kowariancja"
     )
 }
@@ -70,11 +71,14 @@ sigma_matrix <- matrix(
   nrow = p, byrow = TRUE
 ) # sigma_matrix is a matrix invariant under permutation (1,2,3,4,5)(6)
 
-plot_matrix_5 <- plot_matrix(sigma_matrix, "(1,2,3,4,5)(6)")
+plot_matrix_5 <- plot_matrix(
+  sigma_matrix,
+  bquote(atop("Prawdziwa macierz kowariancji                              ", paste("niezmiennicza względem permutacji ", bold("(1,2,3,4,5)(6)"))))
+)
 ggplot2::ggsave(
   file.path(".", "plots", "Dod_C_5.png"),
   plot_matrix_5,
-  width = 12, height = 11,
+  width = 13, height = 12,
   units = "cm"
 )
 
@@ -102,11 +106,14 @@ sigma_matrix <- matrix(
   nrow = p, byrow = TRUE
 ) # sigma_matrix is a matrix invariant under permutation (1,2,3,4)(5)(6)
 
-plot_matrix_4 <- plot_matrix(sigma_matrix, "(1,2,3,4)(5)(6)")
+plot_matrix_4 <- plot_matrix(
+  sigma_matrix,
+  bquote(atop("Prawdziwa macierz kowariancji                               ", paste("niezmiennicza względem permutacji ", bold("(1,2,3,4)(5)(6)"))))
+)
 ggplot2::ggsave(
   file.path(".", "plots", "Dod_C_4.png"),
   plot_matrix_4,
-  width = 12, height = 11,
+  width = 13, height = 12,
   units = "cm"
 )
 
@@ -137,11 +144,14 @@ sigma_matrix <- matrix(
   nrow = p, byrow = TRUE
 ) # sigma_matrix is a matrix invariant under permutation (1,2,3)(4)(5)(6)
 
-plot_matrix_3 <- plot_matrix(sigma_matrix, "(1,2,3)(4)(5)(6)")
+plot_matrix_3 <- plot_matrix(
+  sigma_matrix,
+  bquote(atop("Prawdziwa macierz kowariancji                                ", paste("niezmiennicza względem permutacji ", bold("(1,2,3)(4)(5)(6)"))))
+)
 ggplot2::ggsave(
   file.path(".", "plots", "Dod_C_3.png"),
   plot_matrix_3,
-  width = 12, height = 11,
+  width = 13, height = 12,
   units = "cm"
 )
 
