@@ -4,7 +4,7 @@ library(ggplot2)
 my_seed <- 2024
 set.seed(my_seed)
 
-n <- 500
+n <- 500 # 30 for the comment in summary
 p <- 6
 mu <- numeric(p)
 
@@ -89,6 +89,7 @@ g_BF
 head(get_probabilities_from_gips(g_BF), 8)
 
 g_MH <- get_g_MH(S)
+g_MH
 get_probabilities_from_gips(g_MH)
 
 
@@ -124,6 +125,7 @@ g_BF
 head(get_probabilities_from_gips(g_BF), 8)
 
 g_MH <- get_g_MH(S)
+g_MH
 get_probabilities_from_gips(g_MH)
 
 g_MH_sqrt <- get_g_MH_sqrt(S)
@@ -162,4 +164,5 @@ g_BF
 head(get_probabilities_from_gips(g_BF), 6)
 
 g_MH <- get_g_MH(S)
+g_MH
 get_probabilities_from_gips(g_MH)
