@@ -76,7 +76,7 @@ plot_matrix_5 <- plot_matrix(
   bquote(atop("Prawdziwa macierz kowariancji                              ", paste("niezmiennicza względem permutacji ", bold("(1,2,3,4,5)(6)"))))
 )
 ggplot2::ggsave(
-  file.path(".", "plots", "Dod_C_5.png"),
+  file.path(".", "plots", "Exp_trans_5.png"),
   plot_matrix_5,
   width = 13, height = 12,
   units = "cm"
@@ -112,7 +112,7 @@ plot_matrix_4 <- plot_matrix(
   bquote(atop("Prawdziwa macierz kowariancji                               ", paste("niezmiennicza względem permutacji ", bold("(1,2,3,4)(5)(6)"))))
 )
 ggplot2::ggsave(
-  file.path(".", "plots", "Dod_C_4.png"),
+  file.path(".", "plots", "Exp_trans_4.png"),
   plot_matrix_4,
   width = 13, height = 12,
   units = "cm"
@@ -151,7 +151,7 @@ plot_matrix_3 <- plot_matrix(
   bquote(atop("Prawdziwa macierz kowariancji                                ", paste("niezmiennicza względem permutacji ", bold("(1,2,3)(4)(5)(6)"))))
 )
 ggplot2::ggsave(
-  file.path(".", "plots", "Dod_C_3.png"),
+  file.path(".", "plots", "Exp_trans_3.png"),
   plot_matrix_3,
   width = 13, height = 12,
   units = "cm"
