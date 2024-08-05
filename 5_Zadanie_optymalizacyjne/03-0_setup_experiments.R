@@ -2,7 +2,7 @@
 
 library(gips)
 
-DATADIR <- file.path(".", "4_Zadanie_optymalizacyjne", "data")
+DATADIR <- file.path(".", "5_Zadanie_optymalizacyjne", "data")
 load(file.path(DATADIR, "all_experiments.rda"))
 
 source(file.path(DATADIR, "..", "00-utils.R"))

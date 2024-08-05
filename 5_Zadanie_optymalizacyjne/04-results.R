@@ -1,4 +1,4 @@
-DATADIR <- file.path(".", "4_Zadanie_optymalizacyjne", "data")
+DATADIR <- file.path(".", "5_Zadanie_optymalizacyjne", "data")
 
 library(gips)
 
@@ -99,23 +99,28 @@ get_experiment_result <- function(i) {
   my_results
 }
 
-i <- 26
-print(paste0("n = ", all_experiments[[i]]$n))
-print(paste0("p = ", attr(all_experiments[[i]]$true_perm, "size")))
-print(paste0("cicle length = ", length(all_experiments[[i]]$true_perm[[1]])))
 
-result_list <- get_experiment_result(i)
-result_list$true_perm_value - result_list$max_result_MH
-result_list$true_perm_value - result_list$max_result_MH_S_cos
-exp(result_list$max_result_MH_S_cos - result_list$max_result_MH)
-exp(result_list$max_result_MH_S_cos - result_list$max_result_MH_S_lin)
-exp(mean(result_list$max_result_MH_S_cos - result_list$max_result_MH_S_lin))
+for (i in 1:length(all_experiments)) {
+  print(paste0("n = ", all_experiments[[i]]$n))
+  print(paste0("p = ", attr(all_experiments[[i]]$true_perm, "size")))
+  print(paste0("cicle length = ", length(all_experiments[[i]]$true_perm[[1]])))
+
+  result_list <- get_experiment_result(i)
+
+  print("How many times sq_unequal is bettern than MH:")
+  print(exp(mean(result_list$max_result_MH_sq_unequal - result_list$max_result_MH)))
+  print("How many times sq_unequal is bettern than sq_equal:")
+  print(exp(mean(result_list$max_result_MH_sq_unequal - result_list$max_result_MH_sq_equal)))
+
+  readline(prompt = "Press [enter] to continue")
+}
+
 
 plot_results <- function(type_plot) {
   for (i in 1:length(MH_list_results)) {
     result_list <- get_experiment_result(i)
 
-    plot(result_list$mean_result_MH, type = "l", log = "x", ylim = c(0, 1))
+    plot(result_list$mean_result_MH, type = "l", log = "x", ylim = c(result_list$mean_result_MH[1000], 1), xlim = c(1000, 10000))
     lines(result_list$mean_result_RAND, type = "l", col = "blue")
     legend_name <- c("MH", "RAND")
 
@@ -130,10 +135,10 @@ plot_results <- function(type_plot) {
       lines(result_list$mean_result_MH_S_cos, type = "l", col = "green")
       legend_name <- c(legend_name, "MH_S Const 0.9", "MH_S lin", "MH_S cos")
     } else if (type_plot == "MH_sq") {
-      lines(result_list$mean_result_MH_sq, type = "l", col = "magenta")
+      lines(result_list$mean_result_MH_sq_unequal, type = "l", col = "magenta")
       lines(result_list$mean_result_MH_sq_equal, type = "l", col = "red")
       lines(result_list$mean_result_MH_sq_loads, type = "l", col = "green")
-      legend_name <- c(legend_name, "MH_sq", "MH_sq_equal", "MH_sq_loads")
+      legend_name <- c(legend_name, "MH_sq_unequal", "MH_sq_equal", "MH_sq_loads")
     }
 
     legend(

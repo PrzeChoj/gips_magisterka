@@ -1,10 +1,10 @@
-load(file.path(".", "5_Pakiet_i_jego_zastosowanie", "5_2_breastCancer", "data", "data2.rda"))
+load(file.path(".", "4_Pakiet_i_jego_zastosowanie", "4_2_breastCancer", "data", "data2.rda"))
 S <- cov(data2)
 p <- dim(S)[1]
 
 library(gips)
 
-load(file.path(".", "3_Uzycie_pakietu", "3_1_breastCancer", "data", "g_MAP.rda"))
+load(file.path(".", "4_Pakiet_i_jego_zastosowanie", "4_2_breastCancer", "data", "g_MAP.rda"))
 my_sum <- summary(g_MAP)
 
 table_comparison <- data.frame(matrix(numeric(4 * 2), nrow = 4, ncol = 2))
@@ -54,4 +54,4 @@ table_comparison
 compare_posteriories_of_perms(g_MAP, g_python, print_output = FALSE)
 # 1.60518*10^29 times ours more likely
 
-save(g_python, file = file.path(".", "3_Uzycie_pakietu", "3_1_breastCancer", "data", "g_python.rda"))
+save(g_python, file = file.path(".", "4_Pakiet_i_jego_zastosowanie", "4_2_breastCancer", "data", "g_python.rda"))

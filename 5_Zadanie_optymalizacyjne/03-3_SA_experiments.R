@@ -2,7 +2,7 @@ optimizer <- "SA"
 available_cores <- 47
 F_call <- 10000
 
-DATADIR <- file.path(".", "4_Zadanie_optymalizacyjne", "data")
+DATADIR <- file.path(".", "5_Zadanie_optymalizacyjne", "data")
 source(file.path(DATADIR, "..", "03-0_setup_experiments.R"))
 
 cooling_schedule <- function(i) {

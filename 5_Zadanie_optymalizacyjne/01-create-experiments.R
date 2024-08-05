@@ -1,4 +1,4 @@
-DATADIR <- file.path(".", "4_Zadanie_optymalizacyjne", "data")
+DATADIR <- file.path(".", "5_Zadanie_optymalizacyjne", "data")
 
 library(gips)
 
