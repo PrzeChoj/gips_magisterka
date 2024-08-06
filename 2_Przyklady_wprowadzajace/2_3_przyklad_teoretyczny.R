@@ -56,6 +56,9 @@ p <- ncol(Z) # 6
 S <- (t(Z) %*% Z) / number_of_observations
 my_rank(S) # matrix S is of rank 4
 
+# sqrt Mean Squared Error
+norm(S - sigma_matrix, "F") # 3.33
+
 g <- gips(S, number_of_observations, was_mean_estimated = FALSE)
 
 S_CoV_ggplot <- plot(g, type = "heatmap") +
@@ -88,6 +91,10 @@ S_projected <- project_matrix(S, g_map)
 S_projected
 
 my_rank(S_projected) # matrix S_projected is of rank 6
+
+# sqrt Mean Squared Error
+norm(S_projected - sigma_matrix, "F") # 1.30
+
 
 # Plot the found matrix:
 S_gips_CoV_ggplot <- plot(g_map, type = "heatmap") +
