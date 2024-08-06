@@ -1,5 +1,9 @@
 library(gips)
 
+my_rank <- function (my_S) {
+  sum(eigen(my_S, TRUE, TRUE)$values > 0.0001)
+}
+
 # Prepare model, multivariate normal distribution
 p <- 6
 n <- 4
@@ -50,6 +54,7 @@ p <- ncol(Z) # 6
 
 # Calculate the covariance matrix from the data:
 S <- (t(Z) %*% Z) / number_of_observations
+my_rank(S) # matrix S is of rank 4
 
 g <- gips(S, number_of_observations, was_mean_estimated = FALSE)
 
@@ -81,6 +86,8 @@ summary(g_map)$n0 <= number_of_observations # 1 <= 4
 
 S_projected <- project_matrix(S, g_map)
 S_projected
+
+my_rank(S_projected) # matrix S_projected is of rank 6
 
 # Plot the found matrix:
 S_gips_CoV_ggplot <- plot(g_map, type = "heatmap") +
