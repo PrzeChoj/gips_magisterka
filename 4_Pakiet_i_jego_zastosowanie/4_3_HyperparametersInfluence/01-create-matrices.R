@@ -2,7 +2,7 @@ library(gips)
 
 set.seed(2022)
 
-DATADIR <- file.path(".", "5_Pakiet_i_jego_zastosowanie", "5_3_HyperparametersInfluence", "data")
+DATADIR <- file.path(".", "4_Pakiet_i_jego_zastosowanie", "4_3_HyperparametersInfluence", "data")
 
 p <- 8
 large_structure_perm <- "(12345678)"

@@ -57,7 +57,7 @@ S <- (t(Z) %*% Z) / number_of_observations
 my_rank(S) # matrix S is of rank 4
 
 # sqrt Mean Squared Error
-norm(S - sigma_matrix, "F") # 3.33
+norm(S - sigma_matrix, "F")^2 # 11.1
 
 g <- gips(S, number_of_observations, was_mean_estimated = FALSE)
 
@@ -92,8 +92,8 @@ S_projected
 
 my_rank(S_projected) # matrix S_projected is of rank 6
 
-# sqrt Mean Squared Error
-norm(S_projected - sigma_matrix, "F") # 1.30
+# Mean Squared Error
+norm(S_projected - sigma_matrix, "F")^2 # 1.69
 
 
 # Plot the found matrix:

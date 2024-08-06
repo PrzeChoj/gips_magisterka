@@ -1,7 +1,7 @@
 # 95 minutes on MacBook Air 2017, 4 cores
 # 4 minutes on AMD EPYC 7413 Processor, 24 cores
 
-DATADIR <- file.path(".", "5_Pakiet_i_jego_zastosowanie", "5_3_HyperparametersInfluence", "data")
+DATADIR <- file.path(".", "4_Pakiet_i_jego_zastosowanie", "4_3_HyperparametersInfluence", "data")
 source(file.path(DATADIR, "..", "02-define-functions.R"))
 
 library(parallel)

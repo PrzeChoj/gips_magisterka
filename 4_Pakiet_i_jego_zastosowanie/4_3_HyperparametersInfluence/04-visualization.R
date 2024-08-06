@@ -3,7 +3,7 @@ library(dplyr)
 theme_set(theme_bw())
 
 # load data
-DATADIR <- file.path(".", "5_Pakiet_i_jego_zastosowanie", "5_3_HyperparametersInfluence", "data")
+DATADIR <- file.path(".", "4_Pakiet_i_jego_zastosowanie", "4_3_HyperparametersInfluence", "data")
 load(file.path(DATADIR, "matrices_8.rda"))
 files <- list.files(DATADIR, "*.rda")
 files <- grep("job_[0-9]+_results_.*rda", files, value = TRUE)
