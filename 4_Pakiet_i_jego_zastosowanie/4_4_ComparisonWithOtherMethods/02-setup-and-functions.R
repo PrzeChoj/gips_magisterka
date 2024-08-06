@@ -4,7 +4,7 @@ library(rags2ridges) # requires installing dependencies from BioConductor
 library(grpSLOPE)
 
 N_TRIAL <- 10
-GIPS_N_ITER <- 300000
+GIPS_N_ITER <- 3#300000
 DATADIR <- file.path(".", "4_Pakiet_i_jego_zastosowanie", "4_4_ComparisonWithOtherMethods", "data")
 
 METHODS <- c("rags2ridges", "huge", "gips", "SLOPE")
