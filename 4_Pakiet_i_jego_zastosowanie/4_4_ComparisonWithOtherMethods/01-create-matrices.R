@@ -1,4 +1,4 @@
-DATADIR <- file.path(".", "5_Pakiet_i_jego_zastosowanie", "5_4_ComparisonWithOtherMethods", "data")
+DATADIR <- file.path(".", "4_Pakiet_i_jego_zastosowanie", "4_4_ComparisonWithOtherMethods", "data")
 
 change_no_zeros_to_zeros <- function(no_zeros_matrix) {
   with_zeros_matrix <- no_zeros_matrix

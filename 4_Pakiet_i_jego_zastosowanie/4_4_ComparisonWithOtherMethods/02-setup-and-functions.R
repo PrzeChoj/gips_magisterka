@@ -1,12 +1,15 @@
 library(gips)
 library(huge)
 library(rags2ridges) # requires installing dependencies from BioConductor
+library(grpSLOPE)
 
 N_TRIAL <- 10
 GIPS_N_ITER <- 300000
-DATADIR <- file.path(".", "5_Pakiet_i_jego_zastosowanie", "5_4_ComparisonWithOtherMethods", "data")
+DATADIR <- file.path(".", "4_Pakiet_i_jego_zastosowanie", "4_4_ComparisonWithOtherMethods", "data")
 
-METHODS <- c("rags2ridges", "huge", "gips")
+METHODS <- c("rags2ridges", "huge", "gips", "SLOPE")
+
+source(file.path(DATADIR, "..", "00-gSLOPE.R"))
 
 load(file.path(DATADIR, "matrices_50.rda"))
 p <- nrow(cov_large_str_no_zeros)
@@ -64,9 +67,10 @@ conduct_trial <- function(true_cov, n_points, task_id = -1) {
 estimate_covariance <- function(Z, n_points, method = "", task_id = -1) {
   print(paste0("Began estimating covariance with method ", method, " at ", Sys.time()))
   out <- switch(method,
-    gips = estimate_covariance_with_gips(Z, n_points, task_id),
+    gips        = estimate_covariance_with_gips(Z, n_points, task_id),
     rags2ridges = estimate_covariance_with_ridge(Z, n_points),
-    huge = estimate_covariance_with_huge(Z, n_points)
+    huge        = estimate_covariance_with_huge(Z, n_points),
+    SLOPE       = estimate_covariance_with_SLOPE(Z, n_points)
   )
   print(paste0("Finished estimating covariance with method ", method, " at ", Sys.time()))
   out
@@ -107,6 +111,15 @@ estimate_covariance_with_huge <- function(Z, n_points) {
   )
   select_obj <- huge.select(huge_obj)
   select_obj$opt.cov
+}
+
+estimate_covariance_with_SLOPE <- function(Z, n_points) {
+  S <- (t(Z) %*% Z) / n_points # we know the mean is 0
+  p <- ncol(Z)
+  n <- nrow(Z)
+
+  SLOPE_optimized <- gslope_new(S, lambdaBH(p, n))
+  solve(SLOPE_optimized$precision_matrix)
 }
 
 calculate_loglikelihood <- function(Z, est_cov) {
