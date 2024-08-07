@@ -8,6 +8,7 @@ numCores <- detectCores()
 expected_cores <- 45
 stopifnot(numCores >= expected_cores)
 
+startTime <- Sys.time()
 task_ids <- 1:nrow(tasks) # 180 tasks
 # Parallelisation does not work on Windows
 if (expected_cores > 1) {
@@ -15,6 +16,7 @@ if (expected_cores > 1) {
 } else {
   task_results <- lapply(task_ids, execute_task)
 }
+Sys.time() - startTime
 
 job_results_df_0 <- do.call(rbind, task_results)
 filename <- file.path(

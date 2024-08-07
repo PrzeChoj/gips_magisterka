@@ -5,9 +5,9 @@ theme_set(theme_bw())
 # caption on plots
 switch_names_structure_size <- function(structure_size_name) {
   ifelse(structure_size_name == "large",
-    "large structure",
+    "duża struktura",
     ifelse(structure_size_name == "moderate",
-      "moderate structure", "no structure"
+      "średnia struktura", "brak struktury"
     )
   )
 }
@@ -56,18 +56,25 @@ results_df %>%
 results_df_zeros <- results_df %>%
   filter(zeros_present == "zeros")
 
-
 # plots
+iris |>
+  mutate(across(Species, ~factor(., levels=c("virginica","setosa","versicolor"))))
+#results_df_zeros %>%
+
+
 plot_loglik_comparison <- results_df_zeros %>%
+  mutate(matrix_structure = switch_names_structure_size(matrix_structure)) %>%
+  mutate(across(matrix_structure, ~factor(., levels=c("brak struktury", "średnia struktura", "duża struktura")))) %>%
   ggplot(aes(x = algorithm, y = avg_neg_loglik, col = sample_size)) +
   geom_boxplot() +
-  facet_wrap(vars(switch_names_structure_size(matrix_structure))) +
+  facet_wrap(vars(matrix_structure)) +
   labs(
-    title = "Comparison between estimated and actual covariance matrix\nacross different matrix structures",
-    col = "sample size (n)"
+    title = "Porównanie między estymowaną a prawdziwą macierzą kowariancji\nmiędzy różnymi strukturami macierzy",
+    col = "wielkość próbki (n)"
   ) +
-  xlab("Estimating algoritm") +
-  ylab("Negative loglikelihood weighted by sample size")
+  xlab("Algorytm estymujący") +
+  ylab("Minus logarytm wiarogodności ważony n") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
 plot_loglik_comparison
 ggsave(
   file.path(".", "plots", "Comparison_other_loglik.png"),
@@ -77,16 +84,19 @@ ggsave(
 )
 
 plot_spectral_comparison <- results_df_zeros %>%
+  mutate(matrix_structure = switch_names_structure_size(matrix_structure)) %>%
+  mutate(across(matrix_structure, ~factor(., levels=c("brak struktury", "średnia struktura", "duża struktura")))) %>%
   ggplot(aes(x = algorithm, y = Frobenius_norm, col = sample_size)) +
   geom_boxplot() +
   scale_y_continuous(trans = "log10", breaks = c(1.25, 2.5, 5, 10, 20)) +
-  facet_wrap(vars(switch_names_structure_size(matrix_structure))) +
+  facet_wrap(vars(matrix_structure)) +
   labs(
-    title = "Comparison  between estimated and actual covariance matrix\nacross different matrix structures",
-    col = "sample size (n)"
+    title = "Porównanie między estymowaną a prawdziwą macierzą kowariancji\nmiędzy różnymi strukturami macierzy",
+    col = "wielkość próbki (n)"
   ) +
-  xlab("Estimating algoritm") +
-  ylab("Frobenius norm")
+  xlab("Algorytm estymujący") +
+  ylab("Norma Frobeniusa") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
 plot_spectral_comparison
 ggsave(
   file.path(".", "plots", "Comparison_other_Frobenius.png"),
