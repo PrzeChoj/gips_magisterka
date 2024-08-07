@@ -15,7 +15,7 @@ exp1 <- plot(gips(S, 10, perm = "(1,2,3,4)"), type = 'heatmap') +
 ggplot2::ggsave(
   file.path(".", "plots", "exp_sqrt_1.png"),
   exp1,
-  width = 24.4, height = 20.6,
+  width = 12.4, height = 12.6,
   units = "cm"
 )
 
@@ -25,6 +25,6 @@ exp2 <- plot(gips(S, 10, perm = "(1,3)(2,4)"), type = 'heatmap') +
 ggplot2::ggsave(
   file.path(".", "plots", "exp_sqrt_2.png"),
   exp2,
-  width = 24.4, height = 20.6,
+  width = 12.4, height = 12.6,
   units = "cm"
 )
