@@ -19,7 +19,7 @@ ggplot2::ggsave(
   units = "cm"
 )
 
-exp2 <- plot(gips(S, 10, perm = "(1,3)(2,4)"), type = 'heatmap') +
+exp2 <- plot(gips(S, 10, perm = "(1,3)(2,4)"), type = "heatmap") +
   ggplot2::labs(title = "Przestrzeń pokolorowana permutacją (1,3)(2,4)", x = "", y = "", fill = "value") +
   ggplot2::theme(legend.position = "none")
 ggplot2::ggsave(

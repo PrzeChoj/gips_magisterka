@@ -1,10 +1,11 @@
-DATADIR <- file.path(".", "5_Zadanie_optymalizacyjne", "data")
-
+library(magrittr)
 library(gips)
+
+DATADIR <- file.path(".", "5_Zadanie_optymalizacyjne", "data")
 
 F_call <- 10000
 
-data_amount <- 12
+data_amount <- 13
 my_data <- list()
 data_name <- c()
 
@@ -47,17 +48,64 @@ data_name[length(data_name) + 1] <- "MH_sq_equal"
 load(file.path(DATADIR, paste0("results_MH_sq_a0_9_b0_5_F", F_call, ".rda"))) # MH_sq_list_results
 my_data[[length(my_data) + 1]] <- MH_sq_list_results
 data_name[length(data_name) + 1] <- "MH_sq_loads"
+load(file.path(DATADIR, paste0("results_EA_Test1_F", F_call, ".rda"))) # EA_list_results
+my_data[[length(my_data) + 1]] <- EA_list_results
+data_name[length(data_name) + 1] <- "EA_Test1"
 
 stopifnot(length(my_data) == data_amount)
 stopifnot(length(data_name) == data_amount)
 
-
 source(file.path(DATADIR, "..", "00-utils.R"))
+
+# plot 5.2
+{
+  par(mfrow = c(1, 2))
+
+  i <- 4
+  k <- 1 # MH
+
+  min_value <- min(sapply(1:10, function(j){min(attr(my_data[[k]][[i]][[j]], "optimization_info")$log_posteriori_values)}))
+  max_value <- max(sapply(1:10, function(j){max(attr(my_data[[k]][[i]][[j]], "optimization_info")$log_posteriori_values)}))
+
+  j <- 1
+  attr(my_data[[k]][[i]][[j]], "optimization_info")$log_posteriori_values %>%
+    plot(
+      log = "x",
+      type = "l", ylim = c(min_value, max_value), xlab = "Liczba iteracji", ylab = "Logarytm funkcji celu",
+      main = "Oryginalne 10 przebiegów MH na przykładowym zadaniu"
+    )
+  for (j in 2:10) {
+    attr(my_data[[k]][[i]][[j]], "optimization_info")$log_posteriori_values %>%
+      lines(log = "x")
+  }
+
+  j <- 1
+  attr(my_data[[k]][[i]][[j]], "optimization_info")$log_posteriori_values %>%
+    scale_data(
+      min(attr(my_data[[k]][[i]][[j]], "optimization_info")$log_posteriori_values),
+      max(attr(my_data[[k]][[i]][[j]], "optimization_info")$log_posteriori_values)
+    ) %>%
+    plot(
+      log = "x",
+      type = "l", ylim = c(0, 1), xlab = "Liczba iteracji", ylab = "Przeskalowany logarytm funkcji celu",
+      main = "Przeskalowane 10 przebiegów MH na przykładowym zadaniu"
+    )
+  for (j in 2:10) {
+    attr(my_data[[k]][[i]][[j]], "optimization_info")$log_posteriori_values %>%
+      scale_data(
+        min(attr(my_data[[k]][[i]][[j]], "optimization_info")$log_posteriori_values),
+        max(attr(my_data[[k]][[i]][[j]], "optimization_info")$log_posteriori_values)
+      ) %>%
+      lines(log = "x")
+  }
+
+  par(mfrow = c(1, 1))
+}
 
 get_experiment_result <- function(i) {
   this_result_length <- data_amount * 2 + 1
 
-  my_results <- vector('list', this_result_length)
+  my_results <- vector("list", this_result_length)
 
   for (k in 1:data_amount) {
     my_results[[2*k - 1]] <- numeric(F_call)
@@ -67,7 +115,7 @@ get_experiment_result <- function(i) {
 
 
   for (j in 1:M) {
-    my_values <- vector('list', data_amount)
+    my_values <- vector("list", data_amount)
     for (k in 1:data_amount) {
       my_values[[k]] <- attr(my_data[[k]][[i]][[j]], "optimization_info")$log_posteriori_values
     }
@@ -76,6 +124,9 @@ get_experiment_result <- function(i) {
     value_0 <- min(sapply(my_values, min))
 
     for (k in 1:data_amount) {
+      if (length(my_values[[k]]) < F_call) { # Evolution algorithm can stop a bit early
+        my_values[[k]][(length(my_values[[k]]) + 1) : F_call] <- my_values[[k]][1]
+      }
       my_results[[2*k - 1]] <- my_results[[2*k - 1]] + scale_data(cummax(my_values[[k]]), value_0, value_1)/M
       my_results[[2*k]][j] <- max(my_values[[k]])
     }
@@ -88,7 +139,7 @@ get_experiment_result <- function(i) {
     my_results[[2*data_amount + 1]][j] <- log_posteriori_of_gips(g)
   }
 
-  names(my_results) <- vector('character', this_result_length)
+  names(my_results) <- vector("character", this_result_length)
 
   for (k in 1:data_amount) {
     names(my_results)[2*k - 1] <- paste0("mean_result_", data_name[k])
@@ -112,15 +163,23 @@ for (i in 1:length(all_experiments)) {
   print("How many times sq_unequal is bettern than sq_equal:")
   print(exp(mean(result_list$max_result_MH_sq_unequal - result_list$max_result_MH_sq_equal)))
 
+  print("How many times EA is bettern than MH:")
+  print(exp(mean(result_list$max_result_EA_Test1 - result_list$max_result_MH)))
+
   readline(prompt = "Press [enter] to continue")
 }
 
 
-plot_results <- function(type_plot) {
+plot_results <- function(type_plot, focus = FALSE) {
   for (i in 1:length(MH_list_results)) {
     result_list <- get_experiment_result(i)
 
-    plot(result_list$mean_result_MH, type = "l", log = "x", ylim = c(result_list$mean_result_MH[1000], 1), xlim = c(1000, 10000))
+    if (focus) {
+      plot(result_list$mean_result_MH, type = "l", log = "x", ylim = c(result_list$mean_result_MH[1000], 1), xlim = c(1000, 10000))
+    } else {
+      plot(result_list$mean_result_MH, type = "l", log = "x", ylim = c(0, 1))
+    }
+
     lines(result_list$mean_result_RAND, type = "l", col = "blue")
     legend_name <- c("MH", "RAND")
 
@@ -139,6 +198,11 @@ plot_results <- function(type_plot) {
       lines(result_list$mean_result_MH_sq_equal, type = "l", col = "red")
       lines(result_list$mean_result_MH_sq_loads, type = "l", col = "green")
       legend_name <- c(legend_name, "MH_sq_unequal", "MH_sq_equal", "MH_sq_loads")
+    } else if (type_plot == "EA") {
+      lines(result_list$mean_result_EA_Test1, type = "l", col = "magenta")
+      #lines(result_list$mean_result_, type = "l", col = "red")
+      #lines(result_list$mean_result_, type = "l", col = "green")
+      legend_name <- c(legend_name, "EA_1")#, "MH_sq_equal", "MH_sq_loads")
     }
 
     legend(
@@ -158,3 +222,4 @@ plot_results <- function(type_plot) {
 plot_results("SA")
 plot_results("MH_S")
 plot_results("MH_sq")
+plot_results("EA")
