@@ -1,18 +1,18 @@
 optimizer <- "EA"
-available_cores <- 47
+available_cores <- 90
 F_call <- 10000
 
 DATADIR <- file.path(".", "5_Zadanie_optymalizacyjne", "data")
 source(file.path(DATADIR, "..", "03-0_setup_experiments.R"))
 
 #####
-pop_size = 15
-success_treshold = 0.025
+pop_size = 100
+init = "random_close"
 p_0 = 0.5
-a = 1
-k_max = 1
-tournament_part = 0.5
-init = "random"
+success_treshold = 0.031
+a = 0.3
+k_max = 7
+tournament_part = 0.35
 
 start_time <- Sys.time()
 list_result_experiments <- apply_experiments(
