@@ -18,9 +18,9 @@ data_name[length(data_name) + 1] <- "MH"
 load(file.path(DATADIR, paste0("results_RAND_", F_call, ".rda"))) # RAND_list_results
 my_data[[length(my_data) + 1]] <- RAND_list_results
 data_name[length(data_name) + 1] <- "RAND"
-load(file.path(DATADIR, paste0("results_SA_0_3_", F_call, ".rda"))) # SA_list_results
+load(file.path(DATADIR, paste0("results_SA_10_", F_call, ".rda"))) # SA_list_results
 my_data[[length(my_data) + 1]] <- SA_list_results
-data_name[length(data_name) + 1] <- "SA_0_3"
+data_name[length(data_name) + 1] <- "SA_10"
 load(file.path(DATADIR, paste0("results_SA_0_1_", F_call, ".rda"))) # SA_list_results
 my_data[[length(my_data) + 1]] <- SA_list_results
 data_name[length(data_name) + 1] <- "SA_0_1"
@@ -116,12 +116,16 @@ get_experiment_result <- function(i) {
 
   for (j in 1:M) {
     my_values <- vector("list", data_amount)
-    for (k in 1:data_amount) {
+    for (k in 1:(data_amount - 1)) { # No evolution
       my_values[[k]] <- attr(my_data[[k]][[i]][[j]], "optimization_info")$log_posteriori_values
     }
 
     value_1 <- max(sapply(my_values, max))
     value_0 <- min(sapply(my_values, min))
+
+    for (k in data_amount) { # Add evolution
+      my_values[[k]] <- attr(my_data[[k]][[i]][[j]], "optimization_info")$log_posteriori_values
+    }
 
     for (k in 1:data_amount) {
       if (length(my_values[[k]]) < F_call) { # Evolution algorithm can stop a bit early
@@ -150,6 +154,109 @@ get_experiment_result <- function(i) {
   my_results
 }
 
+plot_results <- function(type_plot, focus = FALSE) {
+  for (i in 1:length(MH_list_results)) {
+    result_list <- get_experiment_result(i)
+
+    if (focus) {
+      my_max <- 1
+      plot(
+        result_list$mean_result_MH, type = "l", log = "x", ylim = c(result_list$mean_result_MH[1000] - 0.02, my_max), xlim = c(1000, 10000),
+        main = paste0("Wykresy ECDF przebiegu dla eksperymentu\nn = ", all_experiments[[i]]$n, "; p = ", attr(all_experiments[[i]]$true_perm, "size"), "; długość cyklu = ", length(all_experiments[[i]]$true_perm[[1]])),
+        xlab = "Liczba iteracji", ylab = "Przeskalowany logarytm funkcji celu"
+      )
+    } else {
+      plot(
+        result_list$mean_result_MH, type = "l", log = "x", ylim = c(0, 1),
+        main = paste0("Wykresy ECDF przebiegu dla eksperymentu\nn = ", all_experiments[[i]]$n, "; p = ", attr(all_experiments[[i]]$true_perm, "size"), "; długość cyklu = ", length(all_experiments[[i]]$true_perm[[1]])),
+        xlab = "Liczba iteracji", ylab = "Przeskalowany logarytm funkcji celu"
+      )
+    }
+
+    lines(result_list$mean_result_RAND, type = "l", col = "blue")
+    legend_name <- c("MH", "RAND")
+
+    if (type_plot == "SA") {
+      lines(result_list$mean_result_SA_10, type = "l", col = "magenta")
+      lines(result_list$mean_result_SA_0_1, type = "l", col = "red")
+      lines(result_list$mean_result_SA_0_01, type = "l", col = "green")
+      legend_name <- c(legend_name, "SA 10", "SA 0.1", "SA 0.01")
+    } else if (type_plot == "MH_S") {
+      lines(result_list$mean_result_MH_S_Const_0_9, type = "l", col = "magenta")
+      lines(result_list$mean_result_MH_S_lin, type = "l", col = "red")
+      lines(result_list$mean_result_MH_S_cos, type = "l", col = "green")
+      legend_name <- c(legend_name, "MH_S Const 0.9", "MH_S lin", "MH_S cos")
+    } else if (type_plot == "MH_sq") {
+      lines(result_list$mean_result_MH_sq_unequal, type = "l", col = "magenta")
+      lines(result_list$mean_result_MH_sq_equal, type = "l", col = "red")
+      lines(result_list$mean_result_MH_sq_loads, type = "l", col = "green")
+      legend_name <- c(legend_name, "sq_a_0_1", "sq_a_0_2", "sq_a_0_9")
+    } else if (type_plot == "EA") {
+      lines(result_list$mean_result_EA_Test1, type = "l", col = "magenta")
+      #lines(result_list$mean_result_, type = "l", col = "red")
+      #lines(result_list$mean_result_, type = "l", col = "green")
+      legend_name <- c(legend_name, "EA")#, "EA2", "EA3")
+    }
+
+    legend(
+      if(focus){1000}else{1}, 0.99, legend = legend_name,
+      col = c("black", "blue", "magenta", "red", "green"),
+      lty = 1, cex = 0.8
+    )
+
+    ic(i)
+    print(paste0("n = ", all_experiments[[i]]$n))
+    print(paste0("p = ", attr(all_experiments[[i]]$true_perm, "size")))
+    print(paste0("cicle length = ", length(all_experiments[[i]]$true_perm[[1]])))
+    readline(prompt="Press [enter] to continue")
+  }
+}
+
+times_better <- function (exp_1, exp_2) {
+  exp_1 <- paste0("max_result_", exp_1)
+  exp_2 <- paste0("max_result_", exp_2)
+
+  num_1_better <- 0
+  num_2_better <- 0
+  num_1_2_equal <- 0
+
+  for (i in 1:length(MH_list_results)) {
+    result_list <- get_experiment_result(i)
+    my_diff <- result_list[[exp_1]] - result_list[[exp_2]]
+    num_1_2_equal <- num_1_2_equal + sum(my_diff == 0)
+    num_1_better <- num_1_better + sum(my_diff > 0)
+    num_2_better <- num_2_better + sum(my_diff < 0)
+  }
+
+  my_out <- list()
+  my_out[[paste0("better_", substring(exp_1, 12, nchar(exp_1)))]] <- num_1_better
+  my_out[[paste0("better_", substring(exp_2, 12, nchar(exp_2)))]] <- num_2_better
+  my_out[["equal"]] <- num_1_2_equal
+
+  my_out
+}
+
+times_better("MH", "SA_0_01") # 183 times MH better, 45 times SA better
+times_better("MH", "SA_0_1") # 134 times MH better, 90 times SA better
+times_better("MH", "SA_10") # 161 times MH better, 63 times SA better
+plot_results("SA")
+plot_results("SA", focus = TRUE)
+
+times_better("MH", "EA_Test1") # 50 times MH better, 188 times EA better
+plot_results("EA")
+plot_results("EA", focus = TRUE)
+
+times_better("MH", "MH_sq_unequal") # 79 times MH better, 148 times sq better
+times_better("MH", "MH_sq_equal") # 81 times MH better, 148 times sq better
+times_better("MH", "MH_sq_loads") # 164 times MH better, 62 times sq better
+plot_results("MH_sq")
+plot_results("MH_sq", focus = TRUE)
+
+times_better("MH_sq_unequal", "MH_sq_equal") # 118 times unequal better; 100 times equal better
+
+#plot_results("MH_S")
+
+
 
 for (i in 1:length(all_experiments)) {
   print(paste0("n = ", all_experiments[[i]]$n))
@@ -168,58 +275,3 @@ for (i in 1:length(all_experiments)) {
 
   readline(prompt = "Press [enter] to continue")
 }
-
-
-plot_results <- function(type_plot, focus = FALSE) {
-  for (i in 1:length(MH_list_results)) {
-    result_list <- get_experiment_result(i)
-
-    if (focus) {
-      plot(result_list$mean_result_MH, type = "l", log = "x", ylim = c(result_list$mean_result_MH[1000], 1), xlim = c(1000, 10000))
-    } else {
-      plot(result_list$mean_result_MH, type = "l", log = "x", ylim = c(0, 1))
-    }
-
-    lines(result_list$mean_result_RAND, type = "l", col = "blue")
-    legend_name <- c("MH", "RAND")
-
-    if (type_plot == "SA") {
-      lines(result_list$mean_result_SA_0_3, type = "l", col = "magenta")
-      lines(result_list$mean_result_SA_0_1, type = "l", col = "red")
-      lines(result_list$mean_result_SA_0_01, type = "l", col = "green")
-      legend_name <- c(legend_name, "SA 0.3", "SA 0.1", "SA 0.01")
-    } else if (type_plot == "MH_S") {
-      lines(result_list$mean_result_MH_S_Const_0_9, type = "l", col = "magenta")
-      lines(result_list$mean_result_MH_S_lin, type = "l", col = "red")
-      lines(result_list$mean_result_MH_S_cos, type = "l", col = "green")
-      legend_name <- c(legend_name, "MH_S Const 0.9", "MH_S lin", "MH_S cos")
-    } else if (type_plot == "MH_sq") {
-      lines(result_list$mean_result_MH_sq_unequal, type = "l", col = "magenta")
-      lines(result_list$mean_result_MH_sq_equal, type = "l", col = "red")
-      lines(result_list$mean_result_MH_sq_loads, type = "l", col = "green")
-      legend_name <- c(legend_name, "MH_sq_unequal", "MH_sq_equal", "MH_sq_loads")
-    } else if (type_plot == "EA") {
-      lines(result_list$mean_result_EA_Test1, type = "l", col = "magenta")
-      #lines(result_list$mean_result_, type = "l", col = "red")
-      #lines(result_list$mean_result_, type = "l", col = "green")
-      legend_name <- c(legend_name, "EA_1")#, "MH_sq_equal", "MH_sq_loads")
-    }
-
-    legend(
-      1, 0.99, legend = legend_name,
-      col = c("black", "blue", "magenta", "red", "green"),
-      lty = 1, cex = 0.5
-    )
-
-    ic(i)
-    print(paste0("n = ", all_experiments[[i]]$n))
-    print(paste0("p = ", attr(all_experiments[[i]]$true_perm, "size")))
-    print(paste0("cicle length = ", length(all_experiments[[i]]$true_perm[[1]])))
-    readline(prompt="Press [enter] to continue")
-  }
-}
-
-plot_results("SA")
-plot_results("MH_S")
-plot_results("MH_sq")
-plot_results("EA")
